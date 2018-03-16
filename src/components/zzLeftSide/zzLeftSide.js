@@ -14,6 +14,22 @@ const routerList = [
   {
     key: '2',
     url: 'user/userList'
+  },
+  {
+    key: '3_1',
+    url: 'product/productList'
+  },
+  {
+    key: '3_2',
+    url: 'product/addProduct'
+  },
+  {
+    key: '3_3',
+    url: 'product/brandAdmin'
+  },
+  {
+    key: '4',
+    url: 'product/productList'
   }
 ];
 
@@ -63,9 +79,9 @@ class ZZLeftSide extends React.Component {
             key="sub1"
             title={<span><Icon type="user" /><span>产品管理</span></span>}
           >
-            <Menu.Item key="3">产品列表</Menu.Item>
-            <Menu.Item key="4">添加产品</Menu.Item>
-            <Menu.Item key="5">品牌管理</Menu.Item>
+            <Menu.Item key="3_1">产品列表</Menu.Item>
+            <Menu.Item key="3_2">添加产品</Menu.Item>
+            <Menu.Item key="3_3">品牌管理</Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub2"

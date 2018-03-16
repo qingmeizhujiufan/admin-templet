@@ -1,7 +1,6 @@
 // 'use strict';
 import _ from 'lodash';
 import sa from 'superagent';
-import UrlUtils from 'Utils/UrlUtils';
 //封装ajax的相关方法
 var ajax = {
     /**
@@ -172,16 +171,16 @@ var ajax = {
             }
         }
         //存在token则携带全局token到header里面，TODO 临时提供，后期采用动态方式
-        var token = AuthToken.getToken();
-        var authenticationStr = AuthToken.getAuthenticationStr();
-        if (_defaults.noToken !== true) {
-            if (token) {
-                req.set('icop-token', token);
-            }
-            if (authenticationStr) {
-                req.set('authority', authenticationStr);
-            }
-        }
+        // var token = AuthToken.getToken();
+        // var authenticationStr = AuthToken.getAuthenticationStr();
+        // if (_defaults.noToken !== true) {
+        //     if (token) {
+        //         req.set('icop-token', token);
+        //     }
+        //     if (authenticationStr) {
+        //         req.set('authority', authenticationStr);
+        //     }
+        // }
         //设置请求携带cookie
         if (_defaults.cookies === true) {
             req.withCredentials();
@@ -233,43 +232,6 @@ var ajax = {
                 _defaults.complete(res);
             }
         });
-    }
-    /**
-     *填充url参数，通过参数key值替换 "{}" 里面的内容
-     *@param url "http://xxxx/crm/{userId}" 或者 "http://xxxx/crm/list?userId={userId}"
-     *@param params {userId: "001"}
-     *@return "http://xxxx/crm/001" 或者 "http://xxxx/crm/list?userId=001"
-     */
-    , fillUrlParams: function fillUrlParams(url, params) {
-        return UrlUtils.fillUrlParams(url, params);
-    }
-    /**
-     * @desc 解析动态参数获取最终参数值
-     * @param 支持以下两类格式：
-     * --------Function---------
-     * function(){
-     *   return {myKey1:'myVal1',myKey2:'myVal2'}
-     * }
-     * --------Obejct内嵌Function（一级）---------
-     * {
-     *    key0:"value0"
-     *    ,key1:function(){
-     *      return {key11:"value11"}
-     *    }
-     * }
-     * 当参数中存在function，会执行并获取其值。
-     * @return 最终返回简单格式的JSON对象
-     */
-    , getParams: function getParams(param) {
-        return UrlUtils.getParams(param);
-    }
-    /**
-     * @desc 将参数追加到URL后面,支持中文参数
-     * @param params{object}需要追加的参数
-     * @return 返回追加参数后的URL
-     */
-    , appendToUrl: function appendToUrl(url, params) {
-        return UrlUtils.appendToUrl(url, params);
     }
 };
 

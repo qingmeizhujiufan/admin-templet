@@ -1,30 +1,22 @@
 import React from 'react';
-import { Table, Icon, Divider } from 'antd';
+import { Table, Icon, Divider, Breadcrumb  } from 'antd';
+import ajax from 'Utils/ajax';
+import '../user.less';
 
-const dataSource = [{
-  key: '1',
-  name: '胡彦斌',
-  age: 32,
-  address: '西湖区湖底公园1号'
-}, {
-  key: '2',
-  name: '胡彦祖',
-  age: 42,
-  address: '西湖区湖底公园1号'
-}];
+const getUserListUrl = 'http://www.xuecheh.com/User/getUserList';
 
 const columns = [{
   title: '姓名',
   dataIndex: 'name',
   key: 'name',
 }, {
-  title: '年龄',
-  dataIndex: 'age',
-  key: 'age',
+  title: '性别',
+  dataIndex: 'sex',
+  key: 'sex',
 }, {
   title: '住址',
-  dataIndex: 'address',
-  key: 'address',
+  dataIndex: 'village',
+  key: 'village',
 }];
 
 class UserList extends React.Component {
@@ -32,12 +24,42 @@ class UserList extends React.Component {
     super(props);
 
     this.state = {
+      dataSource: []
     };
   }
 
+  componentWillMount = () => { 
+  }
+
+  componentDidMount = () => { 
+    var param = {};
+    ajax.getJSON(getUserListUrl, null, (data) => {
+      data =  eval('(' + data.backData + ')');
+      console.log('UserList === ', data);
+      data.map(function(item, index){
+        item.key = index;
+      });
+      this.setState({
+        dataSource: data
+      });
+    });
+  }
+
   render() {
+    const { dataSource } = this.state;
+
     return (
-      <div><Table dataSource={dataSource} columns={columns} /></div>
+      <div className="zui-content">
+        <Breadcrumb>
+          <Breadcrumb.Item>首页</Breadcrumb.Item>
+          <Breadcrumb.Item>人员管理</Breadcrumb.Item>
+        </Breadcrumb>
+        <Table 
+          bordered={true} 
+          dataSource={dataSource} 
+          columns={columns}
+         />
+        </div>
     );
   }
 }
