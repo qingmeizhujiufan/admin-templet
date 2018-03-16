@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Icon, Input, Dropdown, Menu } from 'antd';
+import { Row, Col, Icon, Input, Dropdown, Menu, Avatar } from 'antd';
 import './zzHeader.less';
 
 const menu = (
@@ -26,16 +26,17 @@ class ZZHeader extends React.Component {
       <header className="zui-header">
         <Row type="flex" justify="space-between" align="middle" style={{height: '100%'}}>
           <Col span={12}>
-            <Input.Search
-              placeholder="搜索..."
-              onSearch={value => console.log(value)}
+            <Input
+              className="input-search"
+              placeholder="别说话，搜我..."
+              prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,1)', fontSize: 16, fontWeight: 600 }} />}
               style={{ width: 200 }}
             />
           </Col>
           <Col span={12} style={{textAlign: 'right'}}>
             <Dropdown overlay={menu}>
               <a className="ant-dropdown-link" href="#">
-                ADMIN<Icon type="down" />
+                <Avatar style={{ backgroundColor: '#fc5a59' }} icon="user" /> 管理员<Icon type="down" />
               </a>
             </Dropdown>
           </Col>
