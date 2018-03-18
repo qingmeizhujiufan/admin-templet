@@ -50,16 +50,23 @@ class UserList extends React.Component {
 
     return (
       <div className="zui-content">
-        <Breadcrumb>
-          <Breadcrumb.Item>首页</Breadcrumb.Item>
-          <Breadcrumb.Item>人员管理</Breadcrumb.Item>
-        </Breadcrumb>
-        <Table 
-          bordered={true} 
-          dataSource={dataSource} 
-          columns={columns}
-         />
+        <div className="breadcrumb-block">
+          <Breadcrumb>
+            <Breadcrumb.Item>首页</Breadcrumb.Item>
+            <Breadcrumb.Item>人员管理</Breadcrumb.Item>
+          </Breadcrumb>
         </div>
+        <div className="ibox-title">
+            <h5>所有用户</h5>
+        </div>
+        <div className="ibox-content">
+          <Table 
+            bordered={true} 
+            dataSource={dataSource} 
+            columns={columns}
+          />
+        </div>
+      </div>
     );
   }
 }

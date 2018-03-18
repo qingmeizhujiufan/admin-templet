@@ -13,6 +13,13 @@ import ProductDetailInfo from '../modules/product/component/productDetailInfo';
 import EditProduct from '../modules/product/component/editProduct';
 import AddProduct from '../modules/product/component/addProduct';
 import BrandAdmin from '../modules/product/component/brandAdmin';
+/* 订单管理 */
+import OrderList from '../modules/order/component/orderList';
+/* 案例和新闻管理 */
+import CaseList from '../modules/news/component/caseList';
+import AddCase from '../modules/news/component/addCase';
+import NewsList from '../modules/news/component/newsList';
+import AddNews from '../modules/news/component/addNews';
 
 module.exports = (
     <Route path="/" component={App}>
@@ -23,5 +30,10 @@ module.exports = (
         <route path="product/editProduct/:id" component={EditProduct} />
         <route path="product/AddProduct" component={AddProduct} />
         <route path="product/brandAdmin" component={BrandAdmin} />
+        <route path="order/orderList" component={OrderList} />
+        <route path="news/newsList" component={NewsList} />
+        <route path="news/addNews" component={AddNews} />
+        <route path="news/caseList" component={CaseList} />
+        <route path="news/addCase" component={AddCase} />
     </Route>
 );

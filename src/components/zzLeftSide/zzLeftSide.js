@@ -28,8 +28,24 @@ const routerList = [
     url: 'product/brandAdmin'
   },
   {
-    key: '4',
-    url: 'product/productList'
+    key: '4_1',
+    url: 'order/orderList'
+  },
+  {
+    key: '5_1',
+    url: 'news/caseList'
+  },
+  {
+    key: '5_2',
+    url: 'news/addCase'
+  },
+  {
+    key: '5_3',
+    url: 'news/newsList'
+  },
+  {
+    key: '5_4',
+    url: 'news/addNews'
   }
 ];
 
@@ -68,16 +84,16 @@ class ZZLeftSide extends React.Component {
           mode="inline" 
           onSelect={this.onSelect}>
           <Menu.Item key="1">
-            <Icon type="pie-chart" />
+            <Icon type="home" />
             <span>首页</span>
           </Menu.Item>
           <Menu.Item key="2">
-            <Icon type="desktop" />
+            <Icon type="user" />
             <span>人员管理</span>
           </Menu.Item>
           <SubMenu
             key="sub1"
-            title={<span><Icon type="user" /><span>产品管理</span></span>}
+            title={<span><Icon type="switcher" /><span>产品管理</span></span>}
           >
             <Menu.Item key="3_1">产品列表</Menu.Item>
             <Menu.Item key="3_2">添加产品</Menu.Item>
@@ -85,15 +101,19 @@ class ZZLeftSide extends React.Component {
           </SubMenu>
           <SubMenu
             key="sub2"
-            title={<span><Icon type="team" /><span>Team</span></span>}
+            title={<span><Icon type="line-chart" /><span>订单管理</span></span>}
           >
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
+            <Menu.Item key="4_1">订单列表</Menu.Item>
           </SubMenu>
-          <Menu.Item key="9">
-            <Icon type="file" />
-            <span>File</span>
-          </Menu.Item>
+          <SubMenu
+            key="sub3"
+            title={<span><Icon type="credit-card" /><span>案例和新闻管理</span></span>}
+          >
+            <Menu.Item key="5_1">案例列表</Menu.Item>
+            <Menu.Item key="5_2">添加案例</Menu.Item>
+            <Menu.Item key="5_3">新闻列表</Menu.Item>
+            <Menu.Item key="5_4">添加新闻</Menu.Item>
+          </SubMenu>
         </Menu>
       </Sider>
     );

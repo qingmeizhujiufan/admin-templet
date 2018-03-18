@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown  } from 'antd';
 import ajax from 'Utils/ajax';
-import '../product.less';
+import '../order.less';
 
 const getUserListUrl = 'http://www.xuecheh.com/Product/getProductList';
 
@@ -59,7 +59,7 @@ const columns = [{
     </Dropdown>,
 }];
 
-class ProductList extends React.Component {
+class OrderList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -97,7 +97,7 @@ class ProductList extends React.Component {
           </Breadcrumb>
         </div>
         <div className="ibox-title">
-            <h5>所有产品</h5>
+            <h5>所有订单</h5>
         </div>
         <div className="ibox-content">
           <Table 
@@ -111,8 +111,8 @@ class ProductList extends React.Component {
   }
 }
 
-ProductList.contextTypes = {  
+OrderList.contextTypes = {  
   router: React.PropTypes.object  
 } 
 
-export default ProductList;
+export default OrderList;
