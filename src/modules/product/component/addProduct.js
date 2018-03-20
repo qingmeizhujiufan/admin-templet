@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button } from 'antd';
+import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
 import ajax from 'Utils/ajax';
 import '../product.less';
 
@@ -112,6 +112,32 @@ class AddProduct extends React.Component {
 	      		<Divider>基本信息</Divider>
 	      		<Row>
 	      			<Col span={12}>
+	      				<FormItem
+				            label="封面上传"
+				            {...formItemLayout}
+				          >
+				            <Upload
+				            	action={'http://www.xuecheh.com/AdminManage/UpLoadImage'}
+							    listType={'picture'}
+							    multiple={true}
+							    className='upload-list-inline'
+							    onChange={(data) => {
+							  		notification.open({
+									    message: data,
+									    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+									    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
+									});
+							    }}
+				            >
+						      <Button>
+						        <Icon type="upload" /> upload
+						      </Button>
+						    </Upload>
+				        </FormItem>	      	
+	      			</Col>
+	      		</Row>
+	      		<Row>
+	      			<Col span={12}>
 				        <FormItem
 				            label="产品名称"
 				            {...formItemLayout}
@@ -214,7 +240,7 @@ class AddProduct extends React.Component {
 				        </FormItem>
 				    </Col>
 			    </Row>
-			    <Divider>提交信息</Divider>
+			    <Divider>^</Divider>
 			    <Row type="flex" justify="center">
 			    	<Col>
 			    		<Button type="primary" loading={this.state.loading} onClick={this.saveProduct}>

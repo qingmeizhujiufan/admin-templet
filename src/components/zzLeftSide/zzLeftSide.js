@@ -1,53 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { Layout, Icon, Menu } from 'antd';
 import _ from 'lodash';
 import './zzLeftSide.less';
 
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-
-const routerList = [
-  {
-    key: '1',
-    url: '/'
-  },
-  {
-    key: '2',
-    url: 'user/userList'
-  },
-  {
-    key: '3_1',
-    url: 'product/productList'
-  },
-  {
-    key: '3_2',
-    url: 'product/addProduct'
-  },
-  {
-    key: '3_3',
-    url: 'product/brandAdmin'
-  },
-  {
-    key: '4_1',
-    url: 'order/orderList'
-  },
-  {
-    key: '5_1',
-    url: 'news/caseList'
-  },
-  {
-    key: '5_2',
-    url: 'news/addCase'
-  },
-  {
-    key: '5_3',
-    url: 'news/newsList'
-  },
-  {
-    key: '5_4',
-    url: 'news/addNews'
-  }
-];
 
 class ZZLeftSide extends React.Component {
   constructor(props) {
@@ -63,12 +21,6 @@ class ZZLeftSide extends React.Component {
     this.setState({ collapsed });
   }
 
-  onSelect = (item) => {
-    let router = _.find(routerList, {key: item.key});
-    console.log('router === ', router);
-     this.context.router.push(router.url);
-  }
-
   render() {
     return (
       <Sider
@@ -81,38 +33,58 @@ class ZZLeftSide extends React.Component {
         <Menu 
           theme="dark" 
           defaultSelectedKeys={['1']} 
-          mode="inline" 
-          onSelect={this.onSelect}>
+          mode="inline"
+        >
           <Menu.Item key="1">
-            <Icon type="home" />
-            <span>首页</span>
+            <Link to="/">
+              <Icon type="home" />
+              <span>首页</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Icon type="user" />
-            <span>人员管理</span>
+            <Link to="/user/userList">
+              <Icon type="user" />
+              <span>人员管理</span>
+            </Link>
           </Menu.Item>
           <SubMenu
             key="sub1"
             title={<span><Icon type="switcher" /><span>产品管理</span></span>}
           >
-            <Menu.Item key="3_1">产品列表</Menu.Item>
-            <Menu.Item key="3_2">添加产品</Menu.Item>
-            <Menu.Item key="3_3">品牌管理</Menu.Item>
+            <Menu.Item key="3_1">
+              <Link to="/product/productList">产品列表</Link>
+            </Menu.Item>
+            <Menu.Item key="3_2">
+              <Link to="/product/addProduct">添加产品</Link>
+            </Menu.Item>
+            <Menu.Item key="3_3">
+              <Link to="/product/brandAdmin">品牌管理</Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub2"
             title={<span><Icon type="line-chart" /><span>订单管理</span></span>}
           >
-            <Menu.Item key="4_1">订单列表</Menu.Item>
+            <Menu.Item key="4_1">
+              <Link to="/order/orderList">订单列表</Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub3"
             title={<span><Icon type="credit-card" /><span>案例和新闻管理</span></span>}
           >
-            <Menu.Item key="5_1">案例列表</Menu.Item>
-            <Menu.Item key="5_2">添加案例</Menu.Item>
-            <Menu.Item key="5_3">新闻列表</Menu.Item>
-            <Menu.Item key="5_4">添加新闻</Menu.Item>
+            <Menu.Item key="5_1">
+              <Link to="/news/caseList">案例列表</Link>
+            </Menu.Item>
+            <Menu.Item key="5_2">
+              <Link to="/news/addCase">添加案例</Link>
+            </Menu.Item>
+            <Menu.Item key="5_3">
+              <Link to="/news/newsList">新闻列表</Link>
+            </Menu.Item>
+            <Menu.Item key="5_4">
+              <Link to="/news/addNews">添加新闻</Link>
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
