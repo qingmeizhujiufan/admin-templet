@@ -39,13 +39,9 @@ a:hover {
     text-decoration: none;
     outline: 0;
 }
-ol,
-ul {
+ul, ol {
     padding: 0;
-    list-style: none;
-}
-ol {
-    list-style: outside decimal;
+    margin: 0 0 10px 25px;
 }
 .bullet {
     list-style-type: disc;
@@ -84,6 +80,22 @@ img {
 .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
     padding: 12px 16px !important;
     text-align: center !important;
+}
+
+ul.unstyled, ol.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+
+ul.inline, ol.inline {
+    margin-left: 0;
+    list-style: none;
+}
+
+ul.inline>li, ol.inline>li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 .zui-cotent {

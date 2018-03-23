@@ -240,7 +240,7 @@ class AddProduct extends React.Component {
 				        </FormItem>
 				    </Col>
 			    </Row>
-			    <Divider>^</Divider>
+			    <Divider></Divider>
 			    <Row type="flex" justify="center">
 			    	<Col>
 			    		<Button type="primary" loading={this.state.loading} onClick={this.saveProduct}>
