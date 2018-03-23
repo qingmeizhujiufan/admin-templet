@@ -36,7 +36,7 @@ class ZZHeader extends React.Component {
           <Col span={12} style={{textAlign: 'right'}}>
             <Dropdown overlay={menu}>
               <a className="ant-dropdown-link" href="#">
-                <Avatar style={{ backgroundColor: '#fc5a59' }} icon="user" /> 管理员<Icon type="down" />
+                <Avatar style={{ verticalAlign: '-6px', backgroundColor: '#fc5a59' }} size="small" icon="user" /> 管理员<Icon type="down" />
               </a>
             </Dropdown>
           </Col>
