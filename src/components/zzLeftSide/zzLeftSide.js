@@ -12,21 +12,21 @@ class ZZLeftSide extends React.Component {
     super(props);
 
     this.state = {
-      collapsed: false,
+      collapsed: this.props.collapsed,
     };
   }
 
-  onCollapse = (collapsed) => {
-    console.log(collapsed);
-    this.setState({ collapsed });
+  componentWillReceiveProps = (nextProps) => {
+    console.log('nextProps ==== ', nextProps);
+    this.setState({ collapsed: nextProps.collapsed });
   }
 
   render() {
     return (
       <Sider
+        trigger={null}
         collapsible
         collapsed={this.state.collapsed}
-        onCollapse={this.onCollapse}
         className="left-side"
       >
         <div className="logo">ADMIN</div>

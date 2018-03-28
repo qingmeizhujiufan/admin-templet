@@ -7,14 +7,28 @@ import ZZFooter from 'Comps/zzFooter/zzFooter';
 export default class App extends React.Component {
     constructor(props){
         super(props);
+
+        this.state = {
+            collapsed: false,
+        };
+
+        this.switchCollapsed = this.switchCollapsed.bind(this);
+    }
+
+    switchCollapsed = (collapsed) => {
+        console.log('switchCollapsed collapsed   ==== ', collapsed);
+        this.setState({
+            collapsed,
+        });
     }
 
     render() {
+        let { collapsed } = this.state;
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <ZZLeftSide />
+                <ZZLeftSide collapsed={collapsed} />
                 <Layout>
-                    <ZZHeader />
+                    <ZZHeader switchCollapsed={this.switchCollapsed} collapsed={collapsed} />
                     <div>
                         {this.props.children}
                     </div>
