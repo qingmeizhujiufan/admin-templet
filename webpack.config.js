@@ -5,17 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');//html模板
 const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 
-/*const Visualizer = require('webpack-visualizer-plugin'); // remove it in production environment.
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // remove it in production environment.
-const otherPlugins = process.argv[1].indexOf('webpack-dev-server') >= 0 ? [] : [
-    new Visualizer(), // remove it in production environment.
-    new BundleAnalyzerPlugin({
-        defaultSizes: 'parsed',
-        // generateStatsFile: true,
-        statsOptions: {source: false}
-    }), // remove it in production environment.
-];*/
-
 const postcssOpts = {
     ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
     plugins: () => [
@@ -71,7 +60,7 @@ module.exports = {
                     // presets: [['es2015', { modules: false }], 'stage-0', 'react'] // tree-shaking
                 }
             },
-            {test: /\.(jpg|png)$/, loader: "url-loader?limit=8192&name=img/[name]_[hash:5].[ext]"},
+            {test: /\.(jpg|png|gif)$/, loader: "url-loader?limit=8192&name=img/[name]_[hash:5].[ext]"},
             {test: /\.(woff|svg|eot|ttf)\??.*$/, loader: "url-loader?name=fonts/[name].[md5:hash:hex:7].[ext]"},
             // 注意：如下不使用 ExtractTextPlugin 的写法，不能单独 build 出 css 文件
             // { test: /\.less$/i, loaders: ['style-loader', 'css-loader', 'less-loader'] },

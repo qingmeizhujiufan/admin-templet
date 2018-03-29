@@ -85,6 +85,50 @@ class AddProduct extends React.Component {
   	}
   }
 
+  customRequest = (data, obj, fallback) => {
+  	var file = data.file;
+    console.log('file === ', file);
+    if (1 > 0) {
+        // loadingIn();
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            var img = new Image();
+            img.src = this.result;
+            var fileContent = this.result;
+
+            img.onload = function () {
+                // if (fileContent.length > maxSize)
+                //     fileContent = compress(this);    //图片压缩
+
+                fileContent = fileContent.substring(fileContent.indexOf(",") + 1);
+
+                var params = {
+                    fileName: file.name,
+                    fileContent: fileContent,
+                    fileSize: fileContent.length
+                };
+
+                ajax.postJSON('http://localhost:25007/AdminManage/UpLoadImage', params, function (data) {
+                    if (data.success) {
+                        var backData = data.backData;
+                        console.log("imgbackData===", backData);
+                        notification.open({
+						    message: '上传成功！',
+						    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+						    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
+						});
+                        if (fallback && typeof fallback == 'function')
+                            fallback(img.src, backData);
+                    } else {
+                        alert(data.backMsg ? data.backMsg : "上传失败！");
+                    }                
+                })
+            }
+        }
+    }
+  }
+
   saveProduct = ()=> {
   	this.setState({
   		loading: true
@@ -117,21 +161,15 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				          >
 				            <Upload
-				            	action={'http://www.xuecheh.com/AdminManage/UpLoadImage'}
+				            	action={'http://localhost:25007/AdminManage/UpLoadImage'}
 							    listType={'picture'}
 							    multiple={true}
 							    className='upload-list-inline'
-							    onChange={(data) => {
-							  		notification.open({
-									    message: data,
-									    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-									    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
-									});
+							    customRequest={(data) => {
+							    	this.customRequest(data);
 							    }}
 				            >
-						      <Button>
-						        <Icon type="upload" /> upload
-						      </Button>
+						      <Button><Icon type="upload" /> 上传</Button>
 						    </Upload>
 				        </FormItem>	      	
 	      			</Col>

@@ -12,7 +12,7 @@ class ZZFooter extends React.Component {
   render() {
     return (
       <Footer style={{ textAlign: 'center' }}>
-        Ant Design ©2016 Created by Ant UED
+        admin system ©2018 Created by ZZ
       </Footer>
     );
   }

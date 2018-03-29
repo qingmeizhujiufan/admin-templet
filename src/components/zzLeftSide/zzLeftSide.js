@@ -17,7 +17,6 @@ class ZZLeftSide extends React.Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log('nextProps ==== ', nextProps);
     this.setState({ collapsed: nextProps.collapsed });
   }
 
@@ -34,17 +33,12 @@ class ZZLeftSide extends React.Component {
           theme="dark" 
           defaultSelectedKeys={['1']} 
           mode="inline"
+          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
         >
           <Menu.Item key="1">
             <Link to="/">
               <Icon type="home" />
               <span>首页</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Link to="/user/userList">
-              <Icon type="user" />
-              <span>人员管理</span>
             </Link>
           </Menu.Item>
           <SubMenu
@@ -86,6 +80,12 @@ class ZZLeftSide extends React.Component {
               <Link to="/news/addNews">添加新闻</Link>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item key="2">
+            <Link to="/user/userList">
+              <Icon type="user" />
+              <span>人员管理</span>
+            </Link>
+          </Menu.Item>
         </Menu>
       </Sider>
     );

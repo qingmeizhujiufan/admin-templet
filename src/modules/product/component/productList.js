@@ -1,9 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown  } from 'antd';
 import ajax from 'Utils/ajax';
 import '../product.less';
 
 const getUserListUrl = 'http://www.xuecheh.com/Product/getProductList';
+
+const detailrouter = (id) => {
+  return `/product/productDetailInfo/${id}`
+}
 
 const columns = [{
   title: '产品名称',
@@ -45,18 +50,20 @@ const columns = [{
   key: 'operation',
   fixed: 'right',
   width: 100,
-  render: () => <Dropdown 
+  render: (text, record, index) => (
+    <Dropdown 
       overlay={<Menu>
-    <Menu.Item>
-      <a>详情</a>
-    </Menu.Item>
-    <Menu.Item>
-      <a>删除</a>
-    </Menu.Item>
-  </Menu>}
+                <Menu.Item>
+                  <Link to={detailrouter(record.id)}>详情</Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <a>删除</a>
+                </Menu.Item>
+              </Menu>}
     >
       <a className="ant-dropdown-link" href="#">操作</a>
-    </Dropdown>,
+    </Dropdown>
+  ),
 }];
 
 class ProductList extends React.Component {
