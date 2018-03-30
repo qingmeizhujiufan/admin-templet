@@ -5,6 +5,8 @@ import App from '../modules/App';
 
 /* 首页 */
 import Home from '../modules/home/component/home';
+/* 登录 */
+import Login from '../modules/login/component/login';
 /* 人员管理 */
 import UserList from '../modules/user/component/userList';
 /* 产品管理 */
@@ -21,9 +23,10 @@ import AddCase from '../modules/news/component/addCase';
 import NewsList from '../modules/news/component/newsList';
 import AddNews from '../modules/news/component/addNews';
 
+        // <route path="login" component={Login} />
 module.exports = (
     <Route path="/" component={App}>
-        <IndexRoute component={Home}/>
+        <IndexRoute component={Login}/>
         <route path="user/userList" component={UserList} />
         <route path="product/productList" component={ProductList} />
         <route path="product/productDetailInfo/:id" component={ProductDetailInfo} />

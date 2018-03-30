@@ -93,7 +93,7 @@ class AddProduct extends React.Component {
   		console.log('uploadImageCallBack   file === ', file);
   		return new Promise(
 		    (resolve, reject) => {
-		        const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
+		        const xhr = new XMLHttpRequest();
 		        xhr.open('POST', 'http://localhost:25007/AdminManage/UpLoadImage');
 		        var reader = new FileReader();
 		        reader.readAsDataURL(file);
@@ -103,9 +103,6 @@ class AddProduct extends React.Component {
 		            var fileContent = this.result;
 
 		            img.onload = function () {
-		                // if (fileContent.length > maxSize)
-		                //     fileContent = compress(this);    //图片压缩
-
 		                fileContent = fileContent.substring(fileContent.indexOf(",") + 1);
 
 		                var params = {
@@ -113,29 +110,14 @@ class AddProduct extends React.Component {
 		                    fileContent: fileContent,
 		                    fileSize: fileContent.length
 		                };
-
+		                xhr.setRequestHeader("Content-Type","application/json");
 		                xhr.send(JSON.stringify(params));
-
-		      //           ajax.postJSON('http://localhost:25007/AdminManage/UpLoadImage', params, function (data) {
-		      //               if (data.success) {
-		      //                   var backData = data.backData;
-		      //                   console.log("imgbackData===", backData);
-		      //                   notification.open({
-								//     message: '上传成功！',
-								//     description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-								//     icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
-								// });
-		      //                   if (fallback && typeof fallback == 'function')
-		      //                       fallback(img.src, backData);
-		      //               } else {
-		      //                   alert(data.backMsg ? data.backMsg : "上传失败！");
-		      //               }                
-		      //           })
 		            }
 		        }
 		      
 		      xhr.addEventListener('load', () => {
 		        const response = JSON.parse(xhr.responseText);
+		        console.log('response == ', response);
 		        resolve(response);
 		      });
 		      xhr.addEventListener('error', () => {
@@ -157,7 +139,7 @@ class AddProduct extends React.Component {
 	      		<Row>
 	      			<Col span={12}>
 	      				<FormItem
-				            label="封面上传"
+				            label="新闻封面上传"
 				            {...formItemLayout}
 				          >
 				            <Upload
@@ -177,7 +159,7 @@ class AddProduct extends React.Component {
 	      		<Row>
 	      			<Col span={12}>
 				        <FormItem
-				            label="产品名称"
+				            label="新闻名称"
 				            {...formItemLayout}
 				          >
 				            <Input placeholder="" />
@@ -185,30 +167,7 @@ class AddProduct extends React.Component {
 				    </Col>
 				    <Col span={12}>
 				        <FormItem
-				            label="产品类别"
-				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
-				        </FormItem>
-				    </Col>
-			    </Row>
-			    <Row>
-	      			<Col span={12}>
-				        <FormItem
-				            label="单价"
-				            {...formItemLayout}
-				          >
-				            <InputNumber 
-				            	value={price}
-				            	precision={2}
-				            	formatter={(value) => value + ' 元'}
-				            	style={{width: '100%'}}
-				            />
-				        </FormItem>
-				    </Col>
-				    <Col span={12}>
-				        <FormItem
-				            label="产品规格"
+				            label="新闻类别"
 				            {...formItemLayout}
 				          >
 				            <Input placeholder="" />
@@ -224,6 +183,7 @@ class AddProduct extends React.Component {
         					onEditorStateChange={this.onEditorStateChange}
         					toolbar={{
 						        image: {
+						        	previewImage: true,
 						            uploadCallback: uploadImageCallBack,
 						            alt: { present: true, mandatory: false },
 						        },
