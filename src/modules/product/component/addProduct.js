@@ -1,12 +1,13 @@
 import React from 'react';
 import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../product.less';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const getBrandGroupUrl = 'http://www.xuecheh.com/Product/getBrandList';
+const getBrandGroupUrl = restUrl.ADDR + 'Product/getBrandList';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -109,7 +110,7 @@ class AddProduct extends React.Component {
                     fileSize: fileContent.length
                 };
 
-                ajax.postJSON('http://localhost:25007/AdminManage/UpLoadImage', params, function (data) {
+                ajax.postJSON(restUrl.UPLOAD, params, function (data) {
                     if (data.success) {
                         var backData = data.backData;
                         console.log("imgbackData===", backData);
@@ -161,7 +162,7 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				          >
 				            <Upload
-				            	action={'http://localhost:25007/AdminManage/UpLoadImage'}
+				            	action={restUrl.UPLOAD}
 							    listType={'picture'}
 							    multiple={true}
 							    className='upload-list-inline'

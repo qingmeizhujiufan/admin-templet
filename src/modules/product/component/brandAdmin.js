@@ -1,9 +1,10 @@
 import React from 'react';
 import { Row, Col, Icon, Divider, Breadcrumb, Input, Button  } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../product.less';
 
-const getBrandGroupUrl = 'http://www.xuecheh.com/Product/getBrandList';
+const getBrandGroupUrl = restUrl.ADDR + 'Product/getBrandList';
 
 const Search = Input.Search;
 

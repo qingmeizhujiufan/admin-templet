@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router';
 import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Popconfirm  } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../product.less';
 
-const getProductListUrl = 'http://www.xuecheh.com/Product/getProductList';
+const getProductListUrl = restUrl.ADDR + 'Product/getProductList';
 
 class ProductList extends React.Component {
     constructor(props) {
@@ -101,7 +102,7 @@ class ProductList extends React.Component {
     }
 
     detailrouter = (id) => {
-      return `/product/productDetailInfo/${id}`
+      return `/frame/product/productDetailInfo/${id}`
     }
 
     onDelete = (key) => {
