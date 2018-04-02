@@ -81,6 +81,7 @@ class AddProduct extends React.Component {
   }
 
   onEditorStateChange = (editorState) => {
+  	console.log('onEditorStateChange  editorState ===  ', editorState);
     this.setState({
       editorState,
     });
@@ -94,7 +95,7 @@ class AddProduct extends React.Component {
   		return new Promise(
 		    (resolve, reject) => {
 		        const xhr = new XMLHttpRequest();
-		        xhr.open('POST', 'http://localhost:25007/AdminManage/UpLoadImage');
+		        xhr.open('POST', 'http://localhost:25007/AdminManage/uploadCallback');
 		        var reader = new FileReader();
 		        reader.readAsDataURL(file);
 		        reader.onload = function (e) {
@@ -117,6 +118,7 @@ class AddProduct extends React.Component {
 		      
 		      xhr.addEventListener('load', () => {
 		        const response = JSON.parse(xhr.responseText);
+		        response.data.link = 'http://localhost:25007' + response.data.link;
 		        console.log('response == ', response);
 		        resolve(response);
 		      });

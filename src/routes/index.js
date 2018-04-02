@@ -2,6 +2,7 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 
 import App from '../modules/App';
+import Frame from '../modules/Frame';
 
 /* 首页 */
 import Home from '../modules/home/component/home';
@@ -23,20 +24,24 @@ import AddCase from '../modules/news/component/addCase';
 import NewsList from '../modules/news/component/newsList';
 import AddNews from '../modules/news/component/addNews';
 
-        // <route path="login" component={Login} />
 module.exports = (
     <Route path="/" component={App}>
         <IndexRoute component={Login}/>
-        <route path="user/userList" component={UserList} />
-        <route path="product/productList" component={ProductList} />
-        <route path="product/productDetailInfo/:id" component={ProductDetailInfo} />
-        <route path="product/editProduct/:id" component={EditProduct} />
-        <route path="product/AddProduct" component={AddProduct} />
-        <route path="product/brandAdmin" component={BrandAdmin} />
-        <route path="order/orderList" component={OrderList} />
-        <route path="news/newsList" component={NewsList} />
-        <route path="news/addNews" component={AddNews} />
-        <route path="news/caseList" component={CaseList} />
-        <route path="news/addCase" component={AddCase} />
+        <route path="login" component={Login} />
+        <Route path="/frame" component={Frame}>
+            <IndexRoute component={Home}/>
+            <route path="home" component={Home} />
+            <route path="user/userList" component={UserList} />
+            <route path="product/productList" component={ProductList} />
+            <route path="product/productDetailInfo/:id" component={ProductDetailInfo} />
+            <route path="product/editProduct/:id" component={EditProduct} />
+            <route path="product/AddProduct" component={AddProduct} />
+            <route path="product/brandAdmin" component={BrandAdmin} />
+            <route path="order/orderList" component={OrderList} />
+            <route path="news/newsList" component={NewsList} />
+            <route path="news/addNews" component={AddNews} />
+            <route path="news/caseList" component={CaseList} />
+            <route path="news/addCase" component={AddCase} />
+        </Route>
     </Route>
 );

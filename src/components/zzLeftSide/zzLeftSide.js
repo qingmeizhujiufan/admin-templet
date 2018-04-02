@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { Layout, Icon, Menu } from 'antd';
 import _ from 'lodash';
+import menuTree from './menu';
 import './zzLeftSide.less';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -12,8 +13,60 @@ class ZZLeftSide extends React.Component {
     super(props);
 
     this.state = {
+      defaultSelectedKeys: '1',
       collapsed: this.props.collapsed,
     };
+  }
+
+  componentWillMount = () => {
+    let that = this;
+    let hashUrl = location.hash.split('#')[1];
+    
+    _.forEach(menuTree, function(item){
+      if(item.children){
+        _.find(item.children, function(subItem){
+          if(subItem.link.indexOf(hashUrl) > -1){
+            that.setState({defaultSelectedKeys: subItem.key});
+          }
+        });
+      } else {
+        if(item.link.indexOf(hashUrl) > -1){
+          that.setState({defaultSelectedKeys: item.key});
+        }
+      }
+    });
+  }
+
+  buildMenu = () => {
+    return menuTree.map(function(item, index){
+      if(item.children){
+        return (
+          <SubMenu
+            key={item.key}
+            title={<span><Icon type={item.iconType} /><span>{item.label}</span></span>}
+          >
+          {
+            item.children.map(function(subItem, subIndex){
+              return (
+                <Menu.Item key={subItem.key}>
+                  <Link to={subItem.link}>{subItem.label}</Link>
+                </Menu.Item>
+              )
+            })
+          }
+          </SubMenu>
+        )
+      } else {
+        return (
+          <Menu.Item key={item.key}>
+            <Link to={item.link}>
+              <Icon type={item.iconType} />
+              <span>{item.label}</span>
+            </Link>
+          </Menu.Item>
+        )
+      }
+    });
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -21,6 +74,7 @@ class ZZLeftSide extends React.Component {
   }
 
   render() {
+    let { defaultSelectedKeys } = this.state;
     return (
       <Sider
         trigger={null}
@@ -31,61 +85,11 @@ class ZZLeftSide extends React.Component {
         <div className="logo">ADMIN</div>
         <Menu 
           theme="dark" 
-          defaultSelectedKeys={['1']} 
+          defaultSelectedKeys={[defaultSelectedKeys]} 
           mode="inline"
-          defaultOpenKeys={['sub1', 'sub2', 'sub3']}
+          defaultOpenKeys={['3', '4', '5']}
         >
-          <Menu.Item key="1">
-            <Link to="/">
-              <Icon type="home" />
-              <span>首页</span>
-            </Link>
-          </Menu.Item>
-          <SubMenu
-            key="sub1"
-            title={<span><Icon type="switcher" /><span>产品管理</span></span>}
-          >
-            <Menu.Item key="3_1">
-              <Link to="/product/productList">产品列表</Link>
-            </Menu.Item>
-            <Menu.Item key="3_2">
-              <Link to="/product/addProduct">添加产品</Link>
-            </Menu.Item>
-            <Menu.Item key="3_3">
-              <Link to="/product/brandAdmin">品牌管理</Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub2"
-            title={<span><Icon type="line-chart" /><span>订单管理</span></span>}
-          >
-            <Menu.Item key="4_1">
-              <Link to="/order/orderList">订单列表</Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub3"
-            title={<span><Icon type="credit-card" /><span>案例和新闻管理</span></span>}
-          >
-            <Menu.Item key="5_1">
-              <Link to="/news/caseList">案例列表</Link>
-            </Menu.Item>
-            <Menu.Item key="5_2">
-              <Link to="/news/addCase">添加案例</Link>
-            </Menu.Item>
-            <Menu.Item key="5_3">
-              <Link to="/news/newsList">新闻列表</Link>
-            </Menu.Item>
-            <Menu.Item key="5_4">
-              <Link to="/news/addNews">添加新闻</Link>
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="2">
-            <Link to="/user/userList">
-              <Icon type="user" />
-              <span>人员管理</span>
-            </Link>
-          </Menu.Item>
+          {this.buildMenu()}
         </Menu>
       </Sider>
     );
