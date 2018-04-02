@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
+import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification, Spin } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../product.less';
@@ -26,7 +26,9 @@ class AddProduct extends React.Component {
     	structuralSection: '',
     	hardware: '',
     	sealant: '',
-    	loading: false
+    	loading: false,
+    	loading_1: true,
+    	loading_2: true,
     };
   }
 
@@ -44,15 +46,18 @@ class AddProduct extends React.Component {
   		data =  eval('(' + data.backData + ')');
   		if(type === 1){
   			this.setState({
-  				selectStructuralSectionOptions: data
+  				selectStructuralSectionOptions: data,
+  				loading_1: false
   			});
   		} else if(type === 2) {
   			this.setState({
-  				selectHardwareOptions: data
+  				selectHardwareOptions: data,
+  				loading_2: false
   			});
   		} else {
   			this.setState({
-  				selectSealantOptions: data
+  				selectSealantOptions: data,
+  				loading_3: false
   			});
   		}
   	});
@@ -137,7 +142,7 @@ class AddProduct extends React.Component {
   }
 
   render() {
-  	let { price, selectStructuralSectionOptions, selectHardwareOptions, selectSealantOptions, structuralSection, hardware, sealant } = this.state;
+  	let { price, selectStructuralSectionOptions, selectHardwareOptions, selectSealantOptions, structuralSection, hardware, sealant, loading_1, loading_2, loading_3 } = this.state;
   	if(structuralSection === ''){
   		structuralSection = selectStructuralSectionOptions.length > 0 ? selectStructuralSectionOptions[0].name : '';
   	}
@@ -217,38 +222,42 @@ class AddProduct extends React.Component {
 				    </Col>
 			    </Row>
 			    <Row>
-	      			<Col span={12}>
+	      			<Col span={12}>	    
 				        <FormItem
 				            label="型材品牌"
 				            {...formItemLayout}
-				          >
-				            <Select
-				              placeholder="-请选择-"
-				              value={structuralSection}
-				              onChange={ (value, option) => {
-				              		this.handleSelectChange(value, option, 1);
-				              	}
-				              }
-				            >
-				              {this.fillOptions(selectStructuralSectionOptions)}
-				            </Select>
+				         >
+				          	<Spin spinning={loading_1} indicator={<Icon type="loading" />}>
+					            <Select
+					              placeholder="-请选择-"
+					              value={structuralSection}
+					              onChange={ (value, option) => {
+					              		this.handleSelectChange(value, option, 1);
+					              	}
+					              }
+					            >
+					              {this.fillOptions(selectStructuralSectionOptions)}
+					            </Select>
+				            </Spin>
 				        </FormItem>
 				    </Col>
 				    <Col span={12}>
 				        <FormItem
 				            label="五金配件"
 				            {...formItemLayout}
-				          >
-				            <Select
-				              placeholder="-请选择-"
-				              value={hardware}
-				              onChange={ (value, option) => {
-				              		this.handleSelectChange(value, option, 2);
-				              	}
-				              }
-				            >
-				              {this.fillOptions(selectHardwareOptions)}
-				            </Select>
+				         >
+				         	<Spin spinning={loading_2} indicator={<Icon type="loading" />}>
+					            <Select
+					              placeholder="-请选择-"
+					              value={hardware}
+					              onChange={ (value, option) => {
+					              		this.handleSelectChange(value, option, 2);
+					              	}
+					              }
+					            >
+					              {this.fillOptions(selectHardwareOptions)}
+					            </Select>
+					        </Spin>
 				        </FormItem>
 				    </Col>
 			    </Row>
@@ -257,17 +266,19 @@ class AddProduct extends React.Component {
 				        <FormItem
 				            label="密封胶品牌"
 				            {...formItemLayout}
-				          >
-				            <Select
-				              placeholder="-请选择-"
-				              value={sealant}
-				              onChange={ (value, option) => {
-				              		this.handleSelectChange(value, option, 3);
-				              	}
-				              }
-				            >
-				              {this.fillOptions(selectSealantOptions)}
-				            </Select>
+				        >
+				          	<Spin spinning={loading_3} indicator={<Icon type="loading" />}>
+					            <Select
+					              placeholder="-请选择-"
+					              value={sealant}
+					              onChange={ (value, option) => {
+					              		this.handleSelectChange(value, option, 3);
+					              	}
+					              }
+					            >
+					              {this.fillOptions(selectSealantOptions)}
+					            </Select>
+					        </Spin>
 				        </FormItem>
 				    </Col>
 				    <Col span={12}>

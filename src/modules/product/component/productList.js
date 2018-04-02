@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Popconfirm  } from 'antd';
+import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Popconfirm, Spin } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../product.less';
@@ -81,7 +81,7 @@ class ProductList extends React.Component {
         this.state = {
             dataSource: [],
             visible: false,
-            confirmLoading: false,
+            loading: true,
         };
     }
 
@@ -96,7 +96,8 @@ class ProductList extends React.Component {
             item.key = index;
           });
           this.setState({
-            dataSource: data
+            dataSource: data,
+            loading: false
           });
         });
     }
@@ -111,7 +112,7 @@ class ProductList extends React.Component {
     }
 
   render() {
-    const { dataSource, visible, confirmLoading } = this.state;
+    const { dataSource, visible, loading } = this.state;
 
     return (
     <div className="zui-content">
@@ -126,12 +127,15 @@ class ProductList extends React.Component {
             <h5>所有产品</h5>
         </div>
         <div className="ibox-content">
-          <Table 
-            bordered={true} 
-            dataSource={dataSource} 
-            columns={this.columns}
-          />
+          <Spin spinning={loading}>
+            <Table 
+              bordered={true} 
+              dataSource={dataSource} 
+              columns={this.columns}
+            />
+          </Spin>
         </div>
+        
     </div>
     );
   }

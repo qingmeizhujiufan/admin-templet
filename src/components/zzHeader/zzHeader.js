@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Row, Col, Affix, Icon, Input, Dropdown, Menu, Avatar } from 'antd';
+import { Row, Col, Affix, Icon, Input, Dropdown, Menu, Avatar, Tooltip } from 'antd';
 import './zzHeader.less';
 
 const menu = (
@@ -30,15 +30,19 @@ class ZZHeader extends React.Component {
   }
 
   render() {
+    let { collapsed } = this.state;
+    
     return (
       <header className="zui-header">
         <Row type="flex" justify="space-between" align="middle" style={{height: '100%'}}>
           <Col span={2}>
-            <Icon
-              className="trigger"
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
-            />
+            <Tooltip placement="right" title={collapsed ? '点击张开左侧菜单栏' : '点击收缩左侧菜单栏'}>
+              <Icon
+                className="trigger"
+                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                onClick={this.toggle}
+              />
+            </Tooltip>
           </Col>
           <Col span={10}>
           </Col>

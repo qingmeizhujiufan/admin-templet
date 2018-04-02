@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Icon, Divider, Breadcrumb  } from 'antd';
+import { Table, Icon, Divider, Breadcrumb, Spin  } from 'antd';
 import ajax from 'Utils/ajax';
 import '../user.less';
 
@@ -24,7 +24,8 @@ class UserList extends React.Component {
     super(props);
 
     this.state = {
-      dataSource: []
+      dataSource: [],
+      loading: true,
     };
   }
 
@@ -40,13 +41,14 @@ class UserList extends React.Component {
         item.key = index;
       });
       this.setState({
-        dataSource: data
+        dataSource: data,
+        loading: false
       });
     });
   }
 
   render() {
-    const { dataSource } = this.state;
+    const { dataSource, loading } = this.state;
 
     return (
       <div className="zui-content">
@@ -60,11 +62,13 @@ class UserList extends React.Component {
             <h5>所有用户</h5>
         </div>
         <div className="ibox-content">
-          <Table 
-            bordered={true} 
-            dataSource={dataSource} 
-            columns={columns}
-          />
+          <Spin spinning={loading}>
+            <Table 
+              bordered={true} 
+              dataSource={dataSource} 
+              columns={columns}
+            />
+          </Spin>
         </div>
       </div>
     );

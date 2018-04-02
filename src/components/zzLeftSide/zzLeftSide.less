@@ -9,12 +9,22 @@
 	    color: #fff;
 	}
 
-	.ant-menu-dark, .ant-menu-dark .ant-menu-sub,  {
+	.ant-menu-dark, .ant-menu-dark .ant-menu-sub {
 		background: #373d47;
+		box-shadow: none;
 	}
 
 	.ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
 		background-color: #24272d;
+
+		&:after {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width:3px;
+			height: 100%;
+			background-color: #fc5a59;
+		}
 	}
 
 	.ant-layout-sider-trigger {

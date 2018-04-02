@@ -1,7 +1,7 @@
 const Menu = [
 	{
 		key: '1',
-		iconType: 'home',
+		iconType: 'dashboard',
 		link: '/frame/home',
 		label: '首页'
 	}, {
