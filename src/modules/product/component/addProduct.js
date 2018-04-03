@@ -8,6 +8,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 const getBrandGroupUrl = restUrl.ADDR + 'Product/getBrandList';
+const saveProductUrl = restUrl.ADDR + 'Product/saveProduct';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -96,10 +97,31 @@ class AddProduct extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        // let param = {};
-        // param
-        // console.log('this.context.router === ', this.context.router);
-        // this.context.router.push('/frame/home');
+        let param = {};
+        param.name = values.name;
+        param.type = values.type;
+        param.price = values.price;
+        param.unit = values.unit;
+        param.structuralSection = values.structuralSection;
+        param.hardware = values.hardware;
+        param.sealant = values.sealant;
+        param.detail = values.detail;
+        param.coverAttaches = values.coverAttaches.fileList.map((item, index) => {
+        	return item.response.data.id;
+        }).join(',');
+        param.attaches = values.attaches ? (values.attaches.fileList.map((item, index) => {
+        	return item.response.data.id;
+        }).join(',')) : '';
+        console.log('handleSubmit  param === ', param);
+        
+        ajax.postJSON(saveProductUrl, JSON.stringify(param), (data) => {
+        	notification.open({
+		        message: '新增产品成功！',
+		        description: '恭喜，又上架一款产品。',
+		        icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
+		    });
+		    this.context.router.push('/frame/product/productList');
+        });
       }
     });
   }
@@ -219,13 +241,10 @@ class AddProduct extends React.Component {
 				         >
 				          	<Spin spinning={loading_1} indicator={<Icon type="loading" />}>
 				          		{getFieldDecorator('structuralSection', {
-				                    rules: [{ required: true }],
-				                })(
+				                    rules: [{ required: false }],
+				                    initialValue: structuralSection
+				                })(				              
 						            <Select
-						              onChange={ (value, option) => {
-						              		this.handleSelectChange(value, option, 1);
-						              	}
-						              }
 						            >
 						              {this.fillOptions(selectStructuralSectionOptions)}
 						            </Select>
@@ -240,13 +259,10 @@ class AddProduct extends React.Component {
 				         >
 				         	<Spin spinning={loading_2} indicator={<Icon type="loading" />}>
 					            {getFieldDecorator('hardware', {
-				                    rules: [{ required: true }],
+				                    rules: [{ required: false }],
+				                    initialValue: hardware
 				                })(
 						            <Select
-						              onChange={ (value, option) => {
-						              		this.handleSelectChange(value, option, 2);
-						              	}
-						              }
 						            >
 						              {this.fillOptions(selectHardwareOptions)}
 						            </Select>
@@ -263,13 +279,10 @@ class AddProduct extends React.Component {
 				        >
 				          	<Spin spinning={loading_3} indicator={<Icon type="loading" />}>
 					            {getFieldDecorator('sealant', {
-				                    rules: [{ required: true }],
+				                    rules: [{ required: false }],
+				                    initialValue: sealant
 				                })(
 						            <Select
-						              onChange={ (value, option) => {
-						              		this.handleSelectChange(value, option, 3);
-						              	}
-						              }
 						            >
 						              {this.fillOptions(selectSealantOptions)}
 						            </Select>
@@ -297,15 +310,19 @@ class AddProduct extends React.Component {
 				            label="详情图片上传"
 				            labelCol={{span: 3}}
 				            wrapperCol={{span: 21}}
-				          >
-				            <Upload
-				            	action={restUrl.UPLOAD}
-							    listType={'picture'}
-							    multiple={true}
-							    className='upload-list-inline'
-				            >
-						      <Button><Icon type="upload" /> 上传</Button>
-						    </Upload>
+				        >
+				        	{getFieldDecorator('attaches', {
+			                    rules: [{ required: false }]
+			                })(
+					            <Upload
+					            	action={restUrl.UPLOAD}
+								    listType={'picture'}
+								    multiple={true}
+								    className='upload-list-inline'
+					            >
+							      <Button><Icon type="upload" /> 上传</Button>
+							    </Upload>
+							)}
 				        </FormItem>	      	
 	      			</Col>
 	      		</Row>
