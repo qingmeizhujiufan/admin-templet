@@ -3,6 +3,7 @@ import { Form, Icon, Row, Col, Input, Button, Checkbox } from 'antd';
 import '../login.less';
 
 import loginBg from 'Img/login-bg.jpg';
+import logo from 'Img/logo.png';
 const FormItem = Form.Item;
 
 class Login extends React.Component {
@@ -39,7 +40,10 @@ class Login extends React.Component {
         <div className="login-box">
           <Row>
             <Col span={13} style={{height: '400px', backgroundColor: 'rgba(101, 116, 154, .65)'}}>
-              <div style={{paddingTop: 30, textAlign: 'center', fontSize: 20, color: '#fff'}}>ADMIN</div>
+              <div style={{margin: '85px 0 40px', textAlign: 'center'}}>
+                <Icon type="windows" style={{fontSize: 90, color: '#fff'}} />
+              </div>
+              <div style={{paddingTop: 30, textAlign: 'center', fontSize: 20, color: '#fff'}}>武汉福星宏辉装饰工程有限公司</div>
             </Col>
             <Col span={11} style={{height: '400px', padding: '20px 35px', backgroundColor: '#fff'}}>
               <Form onSubmit={this.handleSubmit} className="login-form">
@@ -51,14 +55,14 @@ class Login extends React.Component {
                   {getFieldDecorator('userName', {
                     rules: [{ required: true, message: '请输入您的用户名!' }],
                   })(
-                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />
+                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} className="login-input" placeholder="用户名" />
                   )}
                 </FormItem>
                 <FormItem>
                   {getFieldDecorator('password', {
                     rules: [{ required: true, message: '请输入您的密码!' }],
                   })(
-                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密码" />
+                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" className="login-input" placeholder="密码" />
                   )}
                 </FormItem>
                 <FormItem>

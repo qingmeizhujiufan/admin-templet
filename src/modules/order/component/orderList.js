@@ -1,70 +1,75 @@
 import React from 'react';
-import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown  } from 'antd';
+import { Link } from 'react-router';
+import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Spin  } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../order.less';
 
-const getUserListUrl = 'http://www.xuecheh.com/Product/getProductList';
+const getUserListUrl = restUrl.ADDR + 'Order/getOrderList';
 
-const columns = [{
-  title: '产品名称',
-  dataIndex: 'name',
-  key: 'name',
-}, {
-  title: '类别',
-  dataIndex: 'type',
-  key: 'type',
-}, {
-  title: '品牌',
-  children: [{
-    title: '型材品牌',
-    dataIndex: 'structuralSection',
-    key: 'structuralSection',
-  }, {
-    title: '五金配件',
-    dataIndex: 'hardware',
-    key: 'hardware',
-  }, {
-    title: '密封胶品牌',
-    dataIndex: 'sealant',
-    key: 'sealant',
-  }]
-}, {
-  title: '单价',
-  dataIndex: 'price',
-  key: 'price',
-}, {
-  title: '状态',
-  dataIndex: 'status',
-  key: 'status',
-}, {
-  title: '创建时间',
-  dataIndex: 'create_time',
-  key: 'create_time',
-}, {
-  title: <a><Icon type="setting" style={{fontSize: 18}} /></a>,
-  key: 'operation',
-  fixed: 'right',
-  width: 100,
-  render: () => <Dropdown 
-      overlay={<Menu>
-    <Menu.Item>
-      <a>详情</a>
-    </Menu.Item>
-    <Menu.Item>
-      <a>删除</a>
-    </Menu.Item>
-  </Menu>}
-    >
-      <a className="ant-dropdown-link" href="#">操作</a>
-    </Dropdown>,
-}];
 
 class OrderList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.columns = [{
+      title: '订单编号',
+      dataIndex: 'orderNo',
+      key: 'orderNo',
+      fixed: 'left',
+      width: 200,
+      render: (text, record, index) => (
+          <Link to={this.detailrouter(record.id)}>{text}</Link>
+      )
+    }, {
+      title: '预订人',
+      dataIndex: 'userName',
+      key: 'userName',
+    }, {
+      title: '预订电话',
+      dataIndex: 'telephone',
+      key: 'telephone',
+    }, {
+      title: '预订地址',
+      dataIndex: 'address',
+      key: 'address',
+      render: (text, record, index) => (
+          <div>{record.province + record.city + record.county + record.area}</div>
+      )
+    }, {
+      title: '安装时间',
+      dataIndex: 'installDate',
+      key: 'installDate',
+    }, {
+      title: '支付金额',
+      dataIndex: 'payMoney',
+      key: 'payMoney',
+    }, {
+      title: '订单状态',
+      dataIndex: 'state',
+      key: 'state',
+    }, {
+      title: <a><Icon type="setting" style={{fontSize: 18}} /></a>,
+      key: 'operation',
+      fixed: 'right',
+      width: 100,
+      render: () => <Dropdown 
+          overlay={<Menu>
+        <Menu.Item>
+          <a>详情</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a>完成订单</a>
+        </Menu.Item>
+      </Menu>}
+        >
+          <a className="ant-dropdown-link">操作</a>
+        </Dropdown>,
+    }];
+
     this.state = {
-      dataSource: []
+      dataSource: [],
+      loading: true
     };
   }
 
@@ -80,13 +85,18 @@ class OrderList extends React.Component {
         item.key = index;
       });
       this.setState({
-        dataSource: data
+        dataSource: data,
+        loading: false
       });
     });
   }
 
+  detailrouter = (id) => {
+    return `/frame/order/orderDetailInfo/${id}`
+  }
+
   render() {
-    const { dataSource } = this.state;
+    const { dataSource, loading } = this.state;
 
     return (
       <div className="zui-content">
@@ -100,13 +110,16 @@ class OrderList extends React.Component {
             <h5>所有订单</h5>
         </div>
         <div className="ibox-content">
-          <Table 
-            bordered={true} 
-            dataSource={dataSource} 
-            columns={columns}
-           />
-          </div>
+          <Spin spinning={loading}>
+            <Table 
+              bordered={true} 
+              dataSource={dataSource} 
+              columns={this.columns}
+              scroll={{ x: 1500 }}
+             />
+          </Spin>
         </div>
+      </div>
     );
   }
 }

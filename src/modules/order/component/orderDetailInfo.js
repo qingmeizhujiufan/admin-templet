@@ -2,19 +2,19 @@ import React from 'react';
 import { Form, Row, Col, Breadcrumb, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
-import '../product.less';
+import '../order.less';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const getProductDetailInfoUrl = restUrl.ADDR + 'Product/getProductInfo';
+const getProductDetailInfoUrl = restUrl.ADDR + 'Order/getOrderInfo';
 
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 12 },
 };
 
-class ProductDetailInfo extends React.Component {
+class OrderDetailInfo extends React.Component {
   constructor(props) {
     super(props);
 
@@ -57,13 +57,13 @@ class ProductDetailInfo extends React.Component {
       	<div className="breadcrumb-block">
 	    	<Breadcrumb>
 	            <Breadcrumb.Item>首页</Breadcrumb.Item>
-	            <Breadcrumb.Item>产品管理</Breadcrumb.Item>
-	            <Breadcrumb.Item>产品列表</Breadcrumb.Item>
-	            <Breadcrumb.Item>产品详情</Breadcrumb.Item>
+	            <Breadcrumb.Item>订单管理</Breadcrumb.Item>
+	            <Breadcrumb.Item>订单列表</Breadcrumb.Item>
+	            <Breadcrumb.Item>订单详情</Breadcrumb.Item>
 	        </Breadcrumb>
 	    </div>
       	<div className="ibox-title">
-            <h5>产品详情</h5>
+            <h5>订单详情</h5>
         </div>
         <div className="ibox-content">
 	      	<Form>
@@ -218,4 +218,4 @@ class ProductDetailInfo extends React.Component {
   }
 }
 
-export default ProductDetailInfo;
+export default OrderDetailInfo;
