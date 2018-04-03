@@ -89,53 +89,22 @@ class AddProduct extends React.Component {
 			sealant: value
 		});
   	}
+  } 
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        // let param = {};
+        // param
+        // console.log('this.context.router === ', this.context.router);
+        // this.context.router.push('/frame/home');
+      }
+    });
   }
 
-  customRequest = (data, obj, fallback) => {
-  	var file = data.file;
-    console.log('file === ', file);
-    if (1 > 0) {
-        // loadingIn();
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function (e) {
-            var img = new Image();
-            img.src = this.result;
-            var fileContent = this.result;
-
-            img.onload = function () {
-                // if (fileContent.length > maxSize)
-                //     fileContent = compress(this);    //图片压缩
-
-                fileContent = fileContent.substring(fileContent.indexOf(",") + 1);
-
-                var params = {
-                    fileName: file.name,
-                    fileContent: fileContent,
-                    fileSize: fileContent.length
-                };
-
-                ajax.postJSON(restUrl.UPLOAD, params, function (data) {
-                    if (data.success) {
-                        var backData = data.backData;
-                        console.log("imgbackData===", backData);
-                        notification.open({
-						    message: '上传成功！',
-						    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-						    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
-						});
-                        if (fallback && typeof fallback == 'function')
-                            fallback(img.src, backData);
-                    } else {
-                        alert(data.backMsg ? data.backMsg : "上传失败！");
-                    }                
-                })
-            }
-        }
-    }
-  }
-
-  saveProduct = ()=> {
+  saveProduct = () => {
   	this.setState({
   		loading: true
   	});
@@ -143,6 +112,8 @@ class AddProduct extends React.Component {
 
   render() {
   	let { price, selectStructuralSectionOptions, selectHardwareOptions, selectSealantOptions, structuralSection, hardware, sealant, loading_1, loading_2, loading_3 } = this.state;
+  	const { getFieldDecorator, setFieldsValue } = this.props.form;
+
   	if(structuralSection === ''){
   		structuralSection = selectStructuralSectionOptions.length > 0 ? selectStructuralSectionOptions[0].name : '';
   	}
@@ -152,49 +123,61 @@ class AddProduct extends React.Component {
   	if(sealant === ''){
 		sealant = selectSealantOptions.length > 0 ? selectSealantOptions[0].name : '';
 	}
+
     return (
       <div className="zui-cotent">
       	<div className="ibox-title">
             <h5>新增产品</h5>
         </div>
         <div className="ibox-content">
-	      	<Form>
-	      		<Divider>基本信息</Divider>
+	      	<Form onSubmit={this.handleSubmit}>
+	      		<Divider>封面信息</Divider>
 	      		<Row>
-	      			<Col span={12}>
+	      			<Col span={24}>
 	      				<FormItem
 				            label="封面上传"
-				            {...formItemLayout}
+				            labelCol={{span: 3}}
+				            wrapperCol={{span: 21}}
 				          >
-				            <Upload
-				            	action={restUrl.UPLOAD}
-							    listType={'picture'}
-							    multiple={true}
-							    className='upload-list-inline'
-							    customRequest={(data) => {
-							    	this.customRequest(data);
-							    }}
-				            >
-						      <Button><Icon type="upload" /> 上传</Button>
-						    </Upload>
+				          	{getFieldDecorator('coverAttaches', {
+			                    rules: [{ required: true, message: '封面图片不能为空!' }],
+			                })(
+					            <Upload
+					            	action={restUrl.UPLOAD}
+								    listType={'picture'}
+								    multiple={true}
+								    className='upload-list-inline'
+					            >
+							      <Button><Icon type="upload" /> 上传</Button>
+							    </Upload>
+							)}
 				        </FormItem>	      	
 	      			</Col>
 	      		</Row>
+	      		<Divider>基本信息</Divider>
 	      		<Row>
 	      			<Col span={12}>
 				        <FormItem
 				            label="产品名称"
 				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
+				        >
+				        	{getFieldDecorator('name', {
+			                    rules: [{ required: true, message: '产品名称不能为空!' }],
+			                })(
+				            	<Input placeholder="" />
+				            )}
 				        </FormItem>
 				    </Col>
 				    <Col span={12}>
 				        <FormItem
 				            label="产品类别"
 				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
+				        >
+				        	{getFieldDecorator('type', {
+			                    rules: [{ required: true, message: '产品类别不能为空!' }],
+			                })(
+			                    <Input placeholder="" />
+			                )}
 				        </FormItem>
 				    </Col>
 			    </Row>
@@ -203,21 +186,28 @@ class AddProduct extends React.Component {
 				        <FormItem
 				            label="单价"
 				            {...formItemLayout}
-				          >
-				            <InputNumber 
-				            	value={price}
-				            	precision={2}
-				            	formatter={(value) => value + ' 元'}
-				            	style={{width: '100%'}}
-				            />
+				        >
+				        	{getFieldDecorator('price', {
+			                    rules: [{ required: true, message: '单价信息不能为空!' }],
+			                })(
+					            <InputNumber
+					            	precision={2}
+					            	formatter={(value) => value + ' 元'}
+					            	style={{width: '100%'}}
+					            />
+					        )}
 				        </FormItem>
 				    </Col>
 				    <Col span={12}>
 				        <FormItem
 				            label="产品规格"
 				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
+				        >
+				        	{getFieldDecorator('unit', {
+			                    rules: [{ required: true, message: '产品规格不能为空!' }],
+			                })(
+				            	<Input placeholder="" />
+				            )}
 				        </FormItem>
 				    </Col>
 			    </Row>
@@ -228,16 +218,18 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				         >
 				          	<Spin spinning={loading_1} indicator={<Icon type="loading" />}>
-					            <Select
-					              placeholder="-请选择-"
-					              value={structuralSection}
-					              onChange={ (value, option) => {
-					              		this.handleSelectChange(value, option, 1);
-					              	}
-					              }
-					            >
-					              {this.fillOptions(selectStructuralSectionOptions)}
-					            </Select>
+				          		{getFieldDecorator('structuralSection', {
+				                    rules: [{ required: true }],
+				                })(
+						            <Select
+						              onChange={ (value, option) => {
+						              		this.handleSelectChange(value, option, 1);
+						              	}
+						              }
+						            >
+						              {this.fillOptions(selectStructuralSectionOptions)}
+						            </Select>
+						        )}
 				            </Spin>
 				        </FormItem>
 				    </Col>
@@ -247,16 +239,18 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				         >
 				         	<Spin spinning={loading_2} indicator={<Icon type="loading" />}>
-					            <Select
-					              placeholder="-请选择-"
-					              value={hardware}
-					              onChange={ (value, option) => {
-					              		this.handleSelectChange(value, option, 2);
-					              	}
-					              }
-					            >
-					              {this.fillOptions(selectHardwareOptions)}
-					            </Select>
+					            {getFieldDecorator('hardware', {
+				                    rules: [{ required: true }],
+				                })(
+						            <Select
+						              onChange={ (value, option) => {
+						              		this.handleSelectChange(value, option, 2);
+						              	}
+						              }
+						            >
+						              {this.fillOptions(selectHardwareOptions)}
+						            </Select>
+						        )}
 					        </Spin>
 				        </FormItem>
 				    </Col>
@@ -268,16 +262,18 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				        >
 				          	<Spin spinning={loading_3} indicator={<Icon type="loading" />}>
-					            <Select
-					              placeholder="-请选择-"
-					              value={sealant}
-					              onChange={ (value, option) => {
-					              		this.handleSelectChange(value, option, 3);
-					              	}
-					              }
-					            >
-					              {this.fillOptions(selectSealantOptions)}
-					            </Select>
+					            {getFieldDecorator('sealant', {
+				                    rules: [{ required: true }],
+				                })(
+						            <Select
+						              onChange={ (value, option) => {
+						              		this.handleSelectChange(value, option, 3);
+						              	}
+						              }
+						            >
+						              {this.fillOptions(selectSealantOptions)}
+						            </Select>
+						        )}
 					        </Spin>
 				        </FormItem>
 				    </Col>
@@ -285,15 +281,38 @@ class AddProduct extends React.Component {
 				        <FormItem
 				            label="说明"
 				            {...formItemLayout}
-				          >
-				            <Input.TextArea autosize={{minRows: 4, maxRows: 6}} />
+				        >
+				        	{getFieldDecorator('detail', {
+			                    rules: [{ required: false }],
+			                })(
+				            	<Input.TextArea autosize={{minRows: 4, maxRows: 6}} />
+				           	)}
 				        </FormItem>
 				    </Col>
 			    </Row>
+			    <Divider>详情信息</Divider>
+	      		<Row>
+	      			<Col span={24}>
+	      				<FormItem
+				            label="详情图片上传"
+				            labelCol={{span: 3}}
+				            wrapperCol={{span: 21}}
+				          >
+				            <Upload
+				            	action={restUrl.UPLOAD}
+							    listType={'picture'}
+							    multiple={true}
+							    className='upload-list-inline'
+				            >
+						      <Button><Icon type="upload" /> 上传</Button>
+						    </Upload>
+				        </FormItem>	      	
+	      			</Col>
+	      		</Row>
 			    <Divider></Divider>
 			    <Row type="flex" justify="center">
 			    	<Col>
-			    		<Button type="primary" loading={this.state.loading} onClick={this.saveProduct}>
+			    		<Button type="primary" htmlType="submit">
 				          提交
 				        </Button>
 			    	</Col>
@@ -305,4 +324,9 @@ class AddProduct extends React.Component {
   }
 }
 
-export default AddProduct;
+const WrappedAddProduct = Form.create()(AddProduct);
+AddProduct.contextTypes = {  
+     router:React.PropTypes.object  
+} 
+
+export default WrappedAddProduct;

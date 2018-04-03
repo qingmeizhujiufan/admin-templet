@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../news.less';
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -9,7 +10,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const getBrandGroupUrl = 'http://www.xuecheh.com/Product/getBrandList';
+// const getBrandGroupUrl = restUrl.ADDR + '';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -54,7 +55,7 @@ class AddProduct extends React.Component {
                     fileSize: fileContent.length
                 };
 
-                ajax.postJSON('http://localhost:25007/AdminManage/UpLoadImage', params, function (data) {
+                ajax.postJSON(restUrl.UPLOAD, params, function (data) {
                     if (data.success) {
                         var backData = data.backData;
                         console.log("imgbackData===", backData);
@@ -87,48 +88,33 @@ class AddProduct extends React.Component {
     });
   }
 
-  render() {
-  	let { price, editorState } = this.state;
-
-  	function uploadImageCallBack(file) {
-  		console.log('uploadImageCallBack   file === ', file);
-  		return new Promise(
+    uploadImageCallBack = (file) => {
+		console.log('uploadImageCallBack   file === ', file);
+		return new Promise(
 		    (resolve, reject) => {
 		        const xhr = new XMLHttpRequest();
-		        xhr.open('POST', 'http://localhost:25007/AdminManage/uploadCallback');
-		        var reader = new FileReader();
-		        reader.readAsDataURL(file);
-		        reader.onload = function (e) {
-		            var img = new Image();
-		            img.src = this.result;
-		            var fileContent = this.result;
-
-		            img.onload = function () {
-		                fileContent = fileContent.substring(fileContent.indexOf(",") + 1);
-
-		                var params = {
-		                    fileName: file.name,
-		                    fileContent: fileContent,
-		                    fileSize: fileContent.length
-		                };
-		                xhr.setRequestHeader("Content-Type","application/json");
-		                xhr.send(JSON.stringify(params));
-		            }
-		        }
+		        xhr.open('POST', restUrl.UPLOAD);
+		        // xhr.setRequestHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+		        const data = new FormData(); // eslint-disable-line no-undef
+	  			data.append('file', file);
+		        xhr.send(data);
 		      
-		      xhr.addEventListener('load', () => {
-		        const response = JSON.parse(xhr.responseText);
-		        response.data.link = 'http://localhost:25007' + response.data.link;
-		        console.log('response == ', response);
-		        resolve(response);
-		      });
-		      xhr.addEventListener('error', () => {
-		        const error = JSON.parse(xhr.responseText);
-		        reject(error);
-		      });
+			    xhr.addEventListener('load', () => {
+			        const response = JSON.parse(xhr.responseText);
+			        response.data.link = restUrl.ADDR + response.data.link;
+			        console.log('response == ', response);
+			        resolve(response);
+			    });
+			    xhr.addEventListener('error', () => {
+			        const error = JSON.parse(xhr.responseText);
+			        reject(error);
+			    });
 		    },
-		 );
+		);
 	}
+
+  render() {
+  	let { price, editorState } = this.state;
 
     return (
       <div className="zui-cotent addNews">
@@ -145,13 +131,10 @@ class AddProduct extends React.Component {
 				            {...formItemLayout}
 				          >
 				            <Upload
-				            	action={'http://localhost:25007/AdminManage/UpLoadImage'}
+				            	action={restUrl.UPLOAD}
 							    listType={'picture'}
-							    multiple={true}
+							    multiple={false}
 							    className='upload-list-inline'
-							    customRequest={(data) => {
-							    	this.customRequest(data);
-							    }}
 				            >
 						      <Button><Icon type="upload" /> 上传</Button>
 						    </Upload>
@@ -186,7 +169,7 @@ class AddProduct extends React.Component {
         					toolbar={{
 						        image: {
 						        	previewImage: true,
-						            uploadCallback: uploadImageCallBack,
+						            uploadCallback: this.uploadImageCallBack,
 						            alt: { present: true, mandatory: false },
 						        },
 						     }}
