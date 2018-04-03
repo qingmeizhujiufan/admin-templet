@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Spin  } from 'antd';
+import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Spin, Badge  } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../order.less';
@@ -21,6 +21,33 @@ class OrderList extends React.Component {
       render: (text, record, index) => (
           <Link to={this.detailrouter(record.id)}>{text}</Link>
       )
+    }, {
+      title: '订单状态',
+      dataIndex: 'state',
+      key: 'state',
+      render: (text, record, index) => {
+        if(record.state === 0){
+          return (
+            <Badge status="warning" text="待支付" />
+          )
+        }else if(record.state === 1){
+          return (
+            <Badge status="processing" text="已支付" />
+          )
+        }else if(record.state === 2){
+          return (
+            <Badge status="success" text="已完成" />
+          )
+        }else if(record.state === -1){
+          return (
+            <Badge status="default" text="已取消" />
+          )
+        }else {
+          return (
+            <Badge status="error" text="异常状态" />
+          )
+        }
+      }
     }, {
       title: '预订人',
       dataIndex: 'userName',
@@ -45,18 +72,14 @@ class OrderList extends React.Component {
       dataIndex: 'payMoney',
       key: 'payMoney',
     }, {
-      title: '订单状态',
-      dataIndex: 'state',
-      key: 'state',
-    }, {
       title: <a><Icon type="setting" style={{fontSize: 18}} /></a>,
       key: 'operation',
       fixed: 'right',
       width: 100,
-      render: () => <Dropdown 
+      render: (text, record, index) => <Dropdown 
           overlay={<Menu>
         <Menu.Item>
-          <a>详情</a>
+          <Link to={this.detailrouter(record.id)}>详情</Link>
         </Menu.Item>
         <Menu.Item>
           <a>完成订单</a>

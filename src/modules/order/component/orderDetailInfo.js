@@ -1,13 +1,14 @@
 import React from 'react';
-import { Form, Row, Col, Breadcrumb, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification } from 'antd';
+import { Form, Row, Col, Breadcrumb, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification, Steps, Spin } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../order.less';
 
 const FormItem = Form.Item;
+const Step = Steps.Step;
 const Option = Select.Option;
 
-const getProductDetailInfoUrl = restUrl.ADDR + 'Order/getOrderInfo';
+const getOrderDetailInfoUrl = restUrl.ADDR + 'Order/getOrderInfo';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -20,8 +21,8 @@ class OrderDetailInfo extends React.Component {
 
     this.state = {
     	data: {},
-    	attachesFileList: [],
     	coverAttachesFileList: [],
+    	loading: true
     };
   }
 
@@ -32,25 +33,60 @@ class OrderDetailInfo extends React.Component {
   //获取产品详情
   getProductDetailInfo = (id) => {
   	let param = {};
-  	param.id = this.props.params.id;
-  	ajax.getJSON(getProductDetailInfoUrl, param, (data) => {
+  	param.orderId = this.props.params.id;
+  	ajax.getJSON(getOrderDetailInfoUrl, param, (data) => {
   		data =  data.backData;
-  		let attachesFileList = data.attaches.split(',').map(function(item, index){
-  			return 'http://www.xuecheh.com/UpLoadFile/' + item + '.png';
-  		});
   		let coverAttachesFileList = data.coverAttaches.split(',').map(function(item, index){
-  			return 'http://www.xuecheh.com/UpLoadFile/' + item + '.png';
+  			return restUrl.ADDR + 'UpLoadFile/' + item + '.png';
   		});
 		this.setState({
 			data,
-			attachesFileList,
-			coverAttachesFileList
+			coverAttachesFileList,
+			loading: false
 		});
   	});
   }
 
+  //展示状态
+  showState = () => {
+  	let {data} = this.state;
+  	if(data.state){
+  		const index = parseInt(data.state);
+  		if(index === 0 || index === 1 || index === 2){
+  			return (
+  				<Steps progressDot current={index} style={{margin: '20px 0'}}>
+				    <Step title="待支付" description="" />
+				    <Step title="已支付" description="" />
+				    <Step title="已完成" description="" />
+				</Steps> 
+  			)
+  		}else if(index === -1){
+  			return (
+  				<Steps progressDot current={1} style={{margin: '20px 0'}}>
+				    <Step title="待支付" description="" />
+				    <Step title="已取消" description="" />
+				</Steps> 
+  			)
+  		}else{
+  			return (
+  				<Steps progressDot current={0} style={{margin: '20px 0'}}>
+				    <Step title="订单异常" description="" />
+				</Steps> 
+  			)
+  		}
+  	}else {
+  		return (
+  			<Steps progressDot current={0} style={{margin: '20px 0'}}>
+			    <Step title="待支付" description="" />
+			    <Step title="已支付" description="" />
+			    <Step title="已完成" description="" />
+			</Steps> 
+  		)
+  	}
+  }
+
   render() {
-  	let { data, attachesFileList, coverAttachesFileList } = this.state;
+  	let { data, coverAttachesFileList, loading } = this.state;
 
     return (
       <div className="zui-cotent">
@@ -66,152 +102,152 @@ class OrderDetailInfo extends React.Component {
             <h5>订单详情</h5>
         </div>
         <div className="ibox-content">
-	      	<Form>
-	      		<Divider>封面信息</Divider>
-	      		<Row>
-	      			<Col span={24}>
-	      				<FormItem
-				            label="封面图片"
-				            labelCol={{span: 3}}
-				            wrapperCol={{span: 21}}
-				          >
-				            <ul className="unstyled inline detail-imglist">
-				            	{
-				            		coverAttachesFileList.map(function(item, index){
-				            			return (
-				            				<li key={index}>
-				            					<img src={item} />
-				            				</li>
-				            			)
-				            		})
-				            	}
-				            </ul>
-				        </FormItem>	      	
-	      			</Col>
-	      		</Row>
-	      		<Divider>基本信息</Divider>
-	      		<Row>
-	      			<Col span={12}>
-				        <FormItem
-				            label="产品名称"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.name} 
-				            />
-				        </FormItem>
-				    </Col>
-				    <Col span={12}>
-				        <FormItem
-				            label="产品类别"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.type} 
-				            />
-				        </FormItem>
-				    </Col>
-			    </Row>
-			    <Row>
-	      			<Col span={12}>
-				        <FormItem
-				            label="单价"
-				            {...formItemLayout}
-				          >
-				            <InputNumber 
-				            	disabled
-				            	value={data.price}
-				            	precision={2}
-				            	formatter={(value) => value + ' 元'}
-				            	style={{width: '100%'}}
-				            />
-				        </FormItem>
-				    </Col>
-				    <Col span={12}>
-				        <FormItem
-				            label="产品规格"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.unit} 
-				            />
-				        </FormItem>
-				    </Col>
-			    </Row>
-			    <Row>
-	      			<Col span={12}>
-				        <FormItem
-				            label="型材品牌"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.structuralSection} 
-				            />
-				        </FormItem>
-				    </Col>
-				    <Col span={12}>
-				        <FormItem
-				            label="五金配件"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.hardware} 
-				            />
-				        </FormItem>
-				    </Col>
-			    </Row>
-			    <Row>
-	      			<Col span={12}>
-				        <FormItem
-				            label="密封胶品牌"
-				            {...formItemLayout}
-				          >
-				            <Input 
-				            	disabled
-				            	value={data.sealant} 
-				            />
-				        </FormItem>
-				    </Col>
-				    <Col span={12}>
-				        <FormItem
-				            label="说明"
-				            {...formItemLayout}
-				          >
-				            <Input.TextArea
-				            	disabled
-				            	value={data.detail}
-				            	autosize={{minRows: 4, maxRows: 6}} />
-				        </FormItem>
-				    </Col>
-			    </Row>
-			    <Divider>详情信息</Divider>
-			    <Row>
-	      			<Col span={24}>
-	      				<FormItem
-				            label="详情图片"
-				            labelCol={{span: 3}}
-				            wrapperCol={{span: 21}}
-				          >
-				            <ul className="unstyled inline detail-imglist">
-				            	{
-				            		attachesFileList.map(function(item, index){
-				            			return (
-				            				<li key={index}>
-				            					<img src={item} />
-				            				</li>
-				            			)
-				            		})
-				            	}
-				            </ul>
-				        </FormItem>	      	
-	      			</Col>
-	      		</Row>
-	        </Form>
+        	<Spin spinning={loading}>
+		      	<Form>
+		      		<Divider>订单状态</Divider>
+		      		<Row>
+		      			<Col span={2}></Col>
+		      			<Col span={20}>
+		      				{this.showState()}      	
+		      			</Col>
+		      		</Row>
+		      		<Divider>订单信息</Divider>
+		      		<Row>
+		      			<Col span={12}>
+					        <FormItem
+					            label="订单号"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.orderNo} 
+					            />
+					        </FormItem>
+					    </Col>
+					    <Col span={12}>
+					        <FormItem
+					            label="订单日期"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.create_time} 
+					            />
+					        </FormItem>
+					    </Col>
+				    </Row>
+				    <Row>
+		      			<Col span={12}>
+					        <FormItem
+					            label="订单金额"
+					            {...formItemLayout}
+					          >
+					            <InputNumber 
+					            	disabled
+					            	value={data.payMoney}
+					            	precision={2}
+					            	formatter={(value) => value + ' 元'}
+					            	style={{width: '100%'}}
+					            />
+					        </FormItem>
+					    </Col>
+					    <Col span={12}>
+					        <FormItem
+					            label="预订人"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.userName} 
+					            />
+					        </FormItem>
+					    </Col>
+				    </Row>
+				    <Row>
+		      			<Col span={12}>
+					        <FormItem
+					            label="预订人电话"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.telephone} 
+					            />
+					        </FormItem>
+					    </Col>
+					    <Col span={12}>
+					        <FormItem
+					            label="安装日期"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.installDate} 
+					            />
+					        </FormItem>
+					    </Col>
+				    </Row>
+				    <Row>
+		      			<Col span={12}>
+					        <FormItem
+					            label="收货人地址"
+					            {...formItemLayout}
+					          >
+					            <Input 
+					            	disabled
+					            	value={data.province + data.city + data.county + data.area} 
+					            />
+					        </FormItem>
+					    </Col>		
+				    </Row>
+				    <Divider>商品信息</Divider>
+				    <Row>
+		      			<Col span={24}>
+		      				<FormItem
+					            label="产品封面图"
+					            labelCol={{span: 3}}
+					            wrapperCol={{span: 21}}
+					          >
+					            <ul className="unstyled inline detail-imglist">
+					            	{
+					            		coverAttachesFileList.map(function(item, index){
+					            			return (
+					            				<li key={index}>
+					            					<img src={item} />
+					            				</li>
+					            			)
+					            		})
+					            	}
+					            </ul>
+					        </FormItem>	      	
+		      			</Col>
+		      		</Row>
+		      		<Row>
+		      			<Col span={12}>
+		      				<FormItem
+					            label="产品名称"
+					            {...formItemLayout}
+					        >
+					            <Input 
+					            	disabled
+					            	value={data.productName} 
+					            />
+					        </FormItem>
+		      			</Col>
+		      			<Col span={12}>
+		      				<FormItem
+					            label="产品单价"
+					            {...formItemLayout}
+					        >
+					            <Input 
+					            	disabled
+					            	value={data.price} 
+					            />
+					        </FormItem>
+		      			</Col>
+		      		</Row>
+		        </Form>
+		    </Spin>
 	    </div>
       </div>
     );
