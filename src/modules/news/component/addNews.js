@@ -3,21 +3,21 @@ import { Form, Row, Col, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Selec
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../news.less';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-// const getBrandGroupUrl = restUrl.ADDR + '';
+const saveNewsUrl = restUrl.ADDR + 'News/saveAPNews';
 
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 12 },
 };
 
-class AddProduct extends React.Component {
+class AddNews extends React.Component {
   constructor(props) {
     super(props);
 
@@ -31,62 +31,43 @@ class AddProduct extends React.Component {
   componentDidMount = () => {
   }
 
-  customRequest = (data, obj, fallback) => {
-  	var file = data.file;
-    console.log('file === ', file);
-    if (1 > 0) {
-        // loadingIn();
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function (e) {
-            var img = new Image();
-            img.src = this.result;
-            var fileContent = this.result;
-
-            img.onload = function () {
-                // if (fileContent.length > maxSize)
-                //     fileContent = compress(this);    //图片压缩
-
-                fileContent = fileContent.substring(fileContent.indexOf(",") + 1);
-
-                var params = {
-                    fileName: file.name,
-                    fileContent: fileContent,
-                    fileSize: fileContent.length
-                };
-
-                ajax.postJSON(restUrl.UPLOAD, params, function (data) {
-                    if (data.success) {
-                        var backData = data.backData;
-                        console.log("imgbackData===", backData);
-                        notification.open({
-						    message: '上传成功！',
-						    description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-						    icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
-						});
-                        if (fallback && typeof fallback == 'function')
-                            fallback(img.src, backData);
-                    } else {
-                        alert(data.backMsg ? data.backMsg : "上传失败！");
-                    }                
-                })
-            }
-        }
-    }
-  }
-
-  saveProduct = ()=> {
-  	this.setState({
-  		loading: true
-  	});
-  }
-
-  onEditorStateChange = (editorState) => {
-  	console.log('onEditorStateChange  editorState ===  ', editorState);
-    this.setState({
-      editorState,
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        this.setState({
+	  		loading: true
+	  	});
+        let param = {};
+        param.news_title = values.news_title;
+        param.news_brief = values.news_brief;
+        param.news_content = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+        param.coverUrl = values.coverUrl ? (values.coverUrl.fileList.map((item, index) => {
+        	return item.response.data.id;
+        }).join(',')) : '';
+        console.log('handleSubmit  param === ', param);
+        
+        ajax.postJSON(saveNewsUrl, JSON.stringify(param), (data) => {
+        	this.setState({
+		  		loading: false
+		  	});
+        	notification.open({
+		        message: '新增新闻成功！',
+		        icon: <Icon type="smile-circle" style={{ color: '#108ee9' }} />,
+		    });
+		    this.context.router.push('/frame/news/newsList');
+        });
+      }
     });
-  }
+    }
+
+	onEditorStateChange = (editorState) => {
+		console.log(' editorState  getCurrentContent===  ', editorState.getCurrentContent());
+		this.setState({
+		  editorState,
+		});
+	}
 
     uploadImageCallBack = (file) => {
 		console.log('uploadImageCallBack   file === ', file);
@@ -94,8 +75,7 @@ class AddProduct extends React.Component {
 		    (resolve, reject) => {
 		        const xhr = new XMLHttpRequest();
 		        xhr.open('POST', restUrl.UPLOAD);
-		        // xhr.setRequestHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-		        const data = new FormData(); // eslint-disable-line no-undef
+		        const data = new FormData();
 	  			data.append('file', file);
 		        xhr.send(data);
 		      
@@ -114,7 +94,8 @@ class AddProduct extends React.Component {
 	}
 
   render() {
-  	let { price, editorState } = this.state;
+  	let { editorState } = this.state;
+  	const { getFieldDecorator, setFieldsValue } = this.props.form;
 
     return (
       <div className="zui-cotent addNews">
@@ -122,22 +103,26 @@ class AddProduct extends React.Component {
             <h5>添加新闻</h5>
         </div>
         <div className="ibox-content">
-	      	<Form>
+	      	<Form onSubmit={this.handleSubmit}>
 	      		<Divider>基本信息</Divider>
 	      		<Row>
 	      			<Col span={12}>
 	      				<FormItem
 				            label="新闻封面上传"
 				            {...formItemLayout}
-				          >
-				            <Upload
-				            	action={restUrl.UPLOAD}
-							    listType={'picture'}
-							    multiple={false}
-							    className='upload-list-inline'
-				            >
-						      <Button><Icon type="upload" /> 上传</Button>
-						    </Upload>
+				        >
+				        	{getFieldDecorator('coverUrl', {
+			                    rules: [{ required: true, message: '封面图片不能为空!' }]
+			                })(
+					            <Upload
+					            	action={restUrl.UPLOAD}
+								    listType={'picture'}
+								    multiple={false}
+								    className='upload-list-inline'
+					            >
+							      <Button><Icon type="upload" /> 上传</Button>
+							    </Upload>
+							)}
 				        </FormItem>	      	
 	      			</Col>
 	      		</Row>
@@ -146,16 +131,24 @@ class AddProduct extends React.Component {
 				        <FormItem
 				            label="新闻名称"
 				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
+				        >
+				        	{getFieldDecorator('news_title', {
+			                    rules: [{ required: true, message: '新闻名称不能为空!' }]
+			                })(
+				            	<Input placeholder="" />
+				            )}
 				        </FormItem>
 				    </Col>
 				    <Col span={12}>
 				        <FormItem
 				            label="新闻类别"
 				            {...formItemLayout}
-				          >
-				            <Input placeholder="" />
+				        >
+				        	{getFieldDecorator('news_brief', {
+			                    rules: [{ required: true, message: '新闻简介不能为空!' }]
+			                })(
+				            	<Input placeholder="" />
+				            )}
 				        </FormItem>
 				    </Col>
 			    </Row>
@@ -179,7 +172,7 @@ class AddProduct extends React.Component {
 			    <Divider></Divider>
 			    <Row type="flex" justify="center">
 			    	<Col>
-			    		<Button type="primary" loading={this.state.loading} onClick={this.saveProduct}>
+			    		<Button type="primary" loading={this.state.loading}  htmlType="submit">
 				          提交
 				        </Button>
 			    	</Col>
@@ -191,4 +184,9 @@ class AddProduct extends React.Component {
   }
 }
 
-export default AddProduct;
+const WrappedAddNews = Form.create()(AddNews);
+AddNews.contextTypes = {  
+     router:React.PropTypes.object  
+} 
+
+export default WrappedAddNews;

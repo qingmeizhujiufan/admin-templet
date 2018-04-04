@@ -24,6 +24,8 @@ import CaseList from '../modules/news/component/caseList';
 import AddCase from '../modules/news/component/addCase';
 import NewsList from '../modules/news/component/newsList';
 import AddNews from '../modules/news/component/addNews';
+import NewsDetailInfo from '../modules/news/component/newsDetailInfo';
+import EditNews from '../modules/news/component/editNews';
 
 module.exports = (
     <Route path="/" component={App}>
@@ -42,6 +44,8 @@ module.exports = (
             <route path="order/orderDetailInfo/:id" component={OrderDetailInfo} />
             <route path="news/newsList" component={NewsList} />
             <route path="news/addNews" component={AddNews} />
+            <route path="news/newsDetailInfo/:id" component={NewsDetailInfo} />
+            <route path="news/editNews/:id" component={EditNews} />
             <route path="news/caseList" component={CaseList} />
             <route path="news/addCase" component={AddCase} />
         </Route>
