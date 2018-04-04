@@ -33,11 +33,11 @@ class NewsDetailInfo extends React.Component {
   }
 
   componentDidMount = () => {
-  	this.getProductDetailInfo();
+  	this.getNewsDetailInfo();
   }
 
   //获取产品详情
-  getProductDetailInfo = (id) => {
+  getNewsDetailInfo = (id) => {
   	let param = {};
   	param.newsId = this.props.params.id;
   	ajax.getJSON(getNewsDetailInfoUrl, param, (data) => {
@@ -45,11 +45,17 @@ class NewsDetailInfo extends React.Component {
   		data.news_content = JSON.parse(data.news_content);
   		data.contentHtml = draftToHtml(data.news_content);
   		console.log('contentHtml === ', data.contentHtml);
+  		data.news_cover = restUrl.ADDR + 'UpLoadFile/' + data.news_cover + '.png';
 		this.setState({
 			data,
 			loading: false
 		});
   	});
+  }
+
+  //跳转修改新闻页面
+  goToEdit = () => {
+  	this.context.router.push('/frame/news/editNews/' + this.props.params.id);
   }
 
   render() {
@@ -72,6 +78,21 @@ class NewsDetailInfo extends React.Component {
         	<Spin spinning={loading}>
 		      	<Form>
 		      		<Divider>新闻信息</Divider>
+		      		<Row>
+		      			<Col span={24}>
+		      				<FormItem
+					            label="新闻封面"
+					            labelCol={{span: 3}}
+					            wrapperCol={{span: 21}}
+					        >
+					            <ul className="unstyled inline detail-imglist">
+		            				<li>
+		            					<img src={data.news_cover} />
+		            				</li>
+					            </ul>
+					        </FormItem>	      	
+		      			</Col>
+		      		</Row>
 		      		<Row>
 		      			<Col span={12}>
 					        <FormItem
@@ -102,6 +123,14 @@ class NewsDetailInfo extends React.Component {
 					        <div dangerouslySetInnerHTML={{__html: data.contentHtml}}></div>
 		      			</Col>
 		      		</Row>
+		      		<Divider></Divider>
+			    	<Row type="flex" justify="center">
+			    	<Col>
+			    		<Button type="primary" onClick={this.goToEdit}>
+				          修改新闻
+				        </Button>
+			    	</Col>
+			    </Row>
 		        </Form>
 		    </Spin>
 	    </div>
@@ -109,5 +138,9 @@ class NewsDetailInfo extends React.Component {
     );
   }
 }
+
+NewsDetailInfo.contextTypes = {  
+  router: React.PropTypes.object  
+} 
 
 export default NewsDetailInfo;

@@ -16,7 +16,7 @@ class NewsList extends React.Component {
       dataIndex: 'news_title',
       key: 'news_title',
       render: (text, record, index) => (
-          <Link to={this.detailrouter(record.id)}>{text}</Link>
+          <Link to={this.detailrouter(record.id, 'show')}>{text}</Link>
       )
     }, {
       title: '概要',
@@ -34,7 +34,10 @@ class NewsList extends React.Component {
       render: (text, record, index) => <Dropdown 
           overlay={<Menu>
         <Menu.Item>
-          <Link to={this.detailrouter(record.id)}>详情</Link>
+          <Link to={this.detailrouter(record.id, 'show')}>详情</Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link to={this.detailrouter(record.id, 'edit')}>更新</Link>
         </Menu.Item>
         <Menu.Item>
           <a>删除</a>
@@ -68,8 +71,11 @@ class NewsList extends React.Component {
     });
   }
 
-  detailrouter = (id) => {
-    return `/frame/news/newsDetailInfo/${id}`
+  detailrouter = (id, type) => {
+    if(type === 'show')
+      return `/frame/news/newsDetailInfo/${id}`;
+    else
+      return `/frame/news/editNews/${id}`;
   }
 
   render() {

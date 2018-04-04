@@ -22,8 +22,8 @@ class AddNews extends React.Component {
     super(props);
 
     this.state = {
-    	price: 100,
     	loading: false,
+    	fileList: [],
     	editorState: EditorState.createEmpty(),
     };
   }
@@ -43,9 +43,9 @@ class AddNews extends React.Component {
         param.news_title = values.news_title;
         param.news_brief = values.news_brief;
         param.news_content = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
-        param.coverUrl = values.coverUrl ? (values.coverUrl.fileList.map((item, index) => {
+        param.news_cover = values.news_cover ? (values.news_cover.fileList.map((item, index) => {
         	return item.response.data.id;
-        }).join(',')) : '';
+        }).join(',')) : null;
         console.log('handleSubmit  param === ', param);
         
         ajax.postJSON(saveNewsUrl, JSON.stringify(param), (data) => {
@@ -93,8 +93,10 @@ class AddNews extends React.Component {
 		);
 	}
 
+	handleChange = ({ fileList }) => this.setState({ fileList })
+
   render() {
-  	let { editorState } = this.state;
+  	let { editorState, fileList } = this.state;
   	const { getFieldDecorator, setFieldsValue } = this.props.form;
 
     return (
@@ -111,7 +113,7 @@ class AddNews extends React.Component {
 				            label="新闻封面上传"
 				            {...formItemLayout}
 				        >
-				        	{getFieldDecorator('coverUrl', {
+				        	{getFieldDecorator('news_cover', {
 			                    rules: [{ required: true, message: '封面图片不能为空!' }]
 			                })(
 					            <Upload
@@ -119,8 +121,9 @@ class AddNews extends React.Component {
 								    listType={'picture'}
 								    multiple={false}
 								    className='upload-list-inline'
+								    onChange={this.handleChange}
 					            >
-							      <Button><Icon type="upload" /> 上传</Button>
+							    	{fileList.length >= 1 ? null : <Button><Icon type="upload" /> 上传</Button>}
 							    </Upload>
 							)}
 				        </FormItem>	      	
@@ -165,7 +168,7 @@ class AddNews extends React.Component {
 						            uploadCallback: this.uploadImageCallBack,
 						            alt: { present: true, mandatory: false },
 						        },
-						     }}
+						    }}
 						/>
 				    </Col>
 			    </Row>
