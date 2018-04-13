@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Popconfirm, Spin } from 'antd';
-import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../product.less';
 
@@ -89,17 +88,8 @@ class ProductList extends React.Component {
     }
 
     componentDidMount = () => { 
-        var param = {};
-        ajax.getJSON(getProductListUrl, null, (data) => {
-          data =  eval('(' + data.backData + ')');
-          data.map(function(item, index){
-            item.key = index;
-          });
-          this.setState({
-            dataSource: data,
-            loading: false
-          });
-        });
+      const {getProductList} = this.props;
+      getProductList(getProductListUrl);
     }
 
     detailrouter = (id) => {
@@ -112,7 +102,8 @@ class ProductList extends React.Component {
     }
 
   render() {
-    const { dataSource, visible, loading } = this.state;
+    console.log('product this.props === ', this.props);
+    const { dataSource, loading } = this.props;
 
     return (
     <div className="zui-content">

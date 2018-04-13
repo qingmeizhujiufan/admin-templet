@@ -13,8 +13,7 @@ class ZZLeftSide extends React.Component {
     super(props);
 
     this.state = {
-      defaultSelectedKeys: '1',
-      collapsed: this.props.collapsed,
+      defaultSelectedKeys: '1'
     };
   }
 
@@ -69,17 +68,14 @@ class ZZLeftSide extends React.Component {
     });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({ collapsed: nextProps.collapsed });
-  }
-
   render() {
-    let { defaultSelectedKeys } = this.state;
+    const { defaultSelectedKeys } = this.state;
+    const { collapsed } = this.props;
     return (
       <Sider
         trigger={null}
         collapsible
-        collapsed={this.state.collapsed}
+        collapsed={collapsed}
         className="left-side"
       >
         <div className="logo">ADMIN</div>

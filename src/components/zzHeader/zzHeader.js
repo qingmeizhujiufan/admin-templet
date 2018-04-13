@@ -14,23 +14,11 @@ const menu = (
 class ZZHeader extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      collapsed: false,
-    };
-  }
-
-  toggle = () => {
-    let { collapsed } = this.state;
-    this.setState({
-      collapsed: !collapsed,
-    });
-
-    return this.props.switchCollapsed(!collapsed);
   }
 
   render() {
-    let { collapsed } = this.state;
+    console.log('zzHeader this.props === ', this.props);
+    const { collapsed, onToggleClick } = this.props;
     
     return (
       <header className="zui-header">
@@ -39,8 +27,8 @@ class ZZHeader extends React.Component {
             <Tooltip placement="right" title={collapsed ? '点击张开左侧菜单栏' : '点击收缩左侧菜单栏'}>
               <Icon
                 className="trigger"
-                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.toggle}
+                type={collapsed ? 'menu-unfold' : 'menu-fold'}
+                onClick={onToggleClick}
               />
             </Tooltip>
           </Col>
