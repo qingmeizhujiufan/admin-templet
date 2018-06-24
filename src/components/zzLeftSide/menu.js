@@ -1,10 +1,11 @@
 const Menu = [
+	// {
+	// 	key: '1',
+	// 	iconType: 'dashboard',
+	// 	link: '/frame/home',
+	// 	label: '首页'
+	// }, {
 	{
-		key: '1',
-		iconType: 'dashboard',
-		link: '/frame/home',
-		label: '首页'
-	}, {
 		key: '3',
 		iconType: 'switcher',
 		link: '',

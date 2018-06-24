@@ -4,7 +4,7 @@ import { Table, Icon, Divider, Breadcrumb, Menu, Dropdown, Popconfirm, Spin } fr
 import restUrl from 'RestUrl';
 import '../product.less';
 
-const getProductListUrl = restUrl.ADDR + 'Product/getProductList';
+const getProductListUrl = restUrl.BASE_HOST + 'Product/getProductList';
 
 class ProductList extends React.Component {
     constructor(props) {

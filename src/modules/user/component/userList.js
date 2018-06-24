@@ -1,9 +1,10 @@
 import React from 'react';
 import { Table, Icon, Divider, Breadcrumb, Spin  } from 'antd';
 import ajax from 'Utils/ajax';
+import restUrl from 'RestUrl';
 import '../user.less';
 
-const getUserListUrl = 'http://www.xuecheh.com/User/getUserList';
+const getUserListUrl = restUrl.ADDR + 'User/getUserList';
 
 const columns = [{
   title: '姓名',

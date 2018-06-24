@@ -15,9 +15,15 @@ var ajax = {
     getJSON: function getJSON(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
             //此时的data实际是success函数
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4] });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4]
+            });
         } else {
-            this.request({ url: url, query: data, success: success, error: error, complete: complete, cookies: cookies });
+            this.request({url: url, query: data, success: success, error: error, complete: complete, cookies: cookies});
         }
     }
     //请求携带Cookies信息
@@ -33,9 +39,24 @@ var ajax = {
     ,
     postJSON: function postJSON(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4], method: 'POST' });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4],
+                method: 'POST'
+            });
         } else {
-            this.request({ url: url, send: data, success: success, error: error, complete: complete, cookies: cookies, method: 'POST' });
+            this.request({
+                url: url,
+                send: data,
+                success: success,
+                error: error,
+                complete: complete,
+                cookies: cookies,
+                method: 'POST'
+            });
         }
     }
     //请求携带Cookies信息
@@ -51,9 +72,24 @@ var ajax = {
     ,
     delJSON: function delJSON(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4], method: 'DELETE' });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4],
+                method: 'DELETE'
+            });
         } else {
-            this.request({ url: url, send: data, success: success, error: success, complete: complete, cookies: cookies, method: 'DELETE' });
+            this.request({
+                url: url,
+                send: data,
+                success: success,
+                error: success,
+                complete: complete,
+                cookies: cookies,
+                method: 'DELETE'
+            });
         }
     }
     //请求携带Cookies信息
@@ -69,9 +105,24 @@ var ajax = {
     ,
     getText: function getText(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4], accept: 'text' });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4],
+                accept: 'text'
+            });
         } else {
-            this.request({ url: url, query: data, success: success, error: error, complete: complete, cookies: cookies, accept: 'text' });
+            this.request({
+                url: url,
+                query: data,
+                success: success,
+                error: error,
+                complete: complete,
+                cookies: cookies,
+                accept: 'text'
+            });
         }
     }
     //请求携带Cookies信息
@@ -87,18 +138,52 @@ var ajax = {
     ,
     postForm: function postForm(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4], method: 'POST', type: 'form' });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4],
+                method: 'POST',
+                type: 'form'
+            });
         } else {
-            this.request({ url: url, send: data, success: success, error: error, complete: complete, cookies: cookies, method: 'POST', type: 'form' });
+            this.request({
+                url: url,
+                send: data,
+                success: success,
+                error: error,
+                complete: complete,
+                cookies: cookies,
+                method: 'POST',
+                type: 'form'
+            });
         }
     }
     //通过post方法请求text数据
     ,
     postText: function postText(url, data, success, error, complete, cookies) {
         if (_.isFunction(data)) {
-            this.request({ url: url, success: arguments[1], error: arguments[2], complete: arguments[3], cookies: arguments[4], method: 'POST', accept: 'text' });
+            this.request({
+                url: url,
+                success: arguments[1],
+                error: arguments[2],
+                complete: arguments[3],
+                cookies: arguments[4],
+                method: 'POST',
+                accept: 'text'
+            });
         } else {
-            this.request({ url: url, send: data, success: success, error: error, complete: complete, cookies: cookies, method: 'POST', accept: 'text' });
+            this.request({
+                url: url,
+                send: data,
+                success: success,
+                error: error,
+                complete: complete,
+                cookies: cookies,
+                method: 'POST',
+                accept: 'text'
+            });
         }
     }
     //请求携带Cookies信息
@@ -170,42 +255,16 @@ var ajax = {
                 }
             }
         }
-        //存在token则携带全局token到header里面，TODO 临时提供，后期采用动态方式
-        // var token = AuthToken.getToken();
-        // var authenticationStr = AuthToken.getAuthenticationStr();
-        // if (_defaults.noToken !== true) {
-        //     if (token) {
-        //         req.set('icop-token', token);
-        //     }
-        //     if (authenticationStr) {
-        //         req.set('authority', authenticationStr);
-        //     }
-        // }
-        //设置请求携带cookie
-        if (_defaults.cookies === true) {
-            req.withCredentials();
+        //存在token则携带全局token到header里面
+        var token = localStorage.token;
+        if (token) {
+            req.set('Token', token);
+        } else {
+            window.location.hash = '/login';
         }
         req.query(_defaults.query).send(_defaults.send).end(function (err, res) {
-            if (err || (res && res.badRequest)) {
-                //    if (res.body !== null) {
-                //        // 如果启用了access_token失效时自动重新登录的功能
-                //        if (defaults.reloginIfTokenExpired) {
-                //            // 8193错误：access_token未找到
-                //            // 8211错误：access_token无效，可能已过期，需要重新授权
-                //            if (res.body.error_code === 8211 || res.body.error_code === 8193) {
-                //                oauth2Logout();
-                //            }
-                //        }
-                //        // logOauth2Error(res.body);
-                //        // oauth2Relogin();
-                //    }
-                if (typeof _defaults.error === 'function') {
-                    //如果有外部的错误异常处理则使用外部的
-                    _defaults.error(res);
-                } else {
-                    //如果没有则使用内部默认的异常处理
-                    // Toast.fail(err.message, 3);
-                }
+            if (err && err.status === 401) {
+                window.location.hash = '/login';
             }
             if (res && res.ok) {
                 if (res.headers && res.headers['icop-content-type']) {

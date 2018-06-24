@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import ZZHeader from '../containers/zzHeader';
 import ZZLeftSide from '../containers/zzLeftSide';
 import ZZFooter from 'Comps/zzFooter/zzFooter';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 export default class App extends React.Component {
     constructor(props){
@@ -15,10 +16,10 @@ export default class App extends React.Component {
                 <ZZLeftSide />
                 <Layout>
                     <ZZHeader />
-                    <div>
+                    <Scrollbars style={{ height: 'calc(100vh - 50px)'}}>
                         {this.props.children}
-                    </div>
-                    <ZZFooter />
+                        <ZZFooter />
+                    </Scrollbars>
                 </Layout>
             </Layout>
         );

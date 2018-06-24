@@ -1,20 +1,14 @@
 import React from 'react';
-import { Form, Row, Col, Breadcrumb, Icon, Input, InputNumber, Dropdown, Menu, Avatar, Select, Divider, Button, Upload, notification, Steps, Spin } from 'antd';
+import { Form, Row, Col, Breadcrumb, Input, Select, Divider, Button, Steps, Spin } from 'antd';
 import ajax from 'Utils/ajax';
 import restUrl from 'RestUrl';
 import '../news.less';
-
-import { EditorState, convertFromRaw, convertToRaw, ContentState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const FormItem = Form.Item;
 const Step = Steps.Step;
 const Option = Select.Option;
 
-const getNewsDetailInfoUrl = restUrl.ADDR + 'News/getNewsDetail';
+const getNewsDetailInfoUrl = restUrl.BASE_HOST + 'News/getNewsDetail';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -27,7 +21,6 @@ class NewsDetailInfo extends React.Component {
 
     this.state = {
     	data: {},
-    	editorState: EditorState.createEmpty(),
     	loading: true
     };
   }
@@ -42,8 +35,8 @@ class NewsDetailInfo extends React.Component {
   	param.newsId = this.props.params.id;
   	ajax.getJSON(getNewsDetailInfoUrl, param, (data) => {
   		data =  data.backData;
-  		data.news_content = JSON.parse(data.news_content);
-  		data.contentHtml = draftToHtml(data.news_content);
+  		data.news_content = decodeURIComponent(data.news_content);
+  		data.contentHtml = data.news_content;
   		console.log('contentHtml === ', data.contentHtml);
   		data.news_cover = restUrl.ADDR + 'UpLoadFile/' + data.news_cover + '.png';
 		this.setState({
@@ -59,7 +52,7 @@ class NewsDetailInfo extends React.Component {
   }
 
   render() {
-  	let { data, editorState, loading } = this.state;
+  	let { data, loading } = this.state;
 
     return (
       <div className="zui-cotent">

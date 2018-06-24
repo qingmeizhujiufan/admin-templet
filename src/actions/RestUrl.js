@@ -1,6 +1,7 @@
-const ADDR = 'http://www.xuecheh.com/';
+const ADDR = 'http://localhost:25007/';//http://www.hbjyjn.com/';
 
 module.exports = {
-    ADDR: ADDR,
+    BASE_HOST: ADDR,
+    ADDR: ADDR + 'api/',
     UPLOAD: ADDR + 'AdminManage/UpLoadImage',
 };
