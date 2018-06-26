@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const Step = Steps.Step;
 const Option = Select.Option;
 
-const getNewsDetailInfoUrl = restUrl.BASE_HOST + 'News/getNewsDetail';
+const getNewsDetailInfoUrl = restUrl.ADDR + 'News/getNewsDetail';
 
 const formItemLayout = {
   labelCol: { span: 6 },
