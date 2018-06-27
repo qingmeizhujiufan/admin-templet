@@ -19,10 +19,9 @@ import restUrl from 'RestUrl';
 import '../news.less';
 
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
-import {Editor} from 'react-draft-wysiwyg';
+import ZZEditor from '../../../components/zzEditor/zzEditor';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const FormItem = Form.Item;
 const Step = Steps.Step;
@@ -58,51 +57,45 @@ class EditNews extends React.Component {
         let param = {};
         param.newsId = this.props.params.id;
         ajax.getJSON(getNewsDetailInfoUrl, param, (data) => {
-            data = data.backData;
-            if (data.news_content && data.news_content !== '') {
-                data.news_content = decodeURIComponent(data.news_content);
-                console.log('data.news_content === ', data.news_content);
-                const contentBlock = htmlToDraft(data.news_content);
-                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-                const editorState = EditorState.createWithContent(contentState);
+            if(data.success){
+                data = data.backData;
+                if (data.news_content && data.news_content !== '') {
+                    data.news_content = decodeURIComponent(data.news_content);
+                    console.log('data.news_content === ', data.news_content);
+                    const contentBlock = htmlToDraft(data.news_content);
+                    const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                    const editorState = EditorState.createWithContent(contentState);
+
+                    this.setState({
+                        editorState
+                    });
+                }
+
+                let news_cover = data.news_cover.split(',');
+                let photoList = [];
+                if (news_cover[0] !== '') {
+                    news_cover.map((photo, index) => {
+                        photoList.push({
+                            uid: photo,
+                            name: photo + '.png',
+                            status: 'done',
+                            url: restUrl.ADDR + 'UpLoadFile/' + photo + '.png',
+                            response: {
+                                data: {
+                                    id: photo
+                                }
+                            }
+                        });
+                    });
+                }
+                data.news_cover = photoList;
 
                 this.setState({
-                    editorState
+                    data,
+                    fileList: photoList,
+                    loading: false
                 });
             }
-
-
-            const fileList = [{
-                uid: -1,
-                name: data.news_cover + '.png',
-                status: 'done',
-                url: restUrl.ADDR + 'UpLoadFile/' + data.news_cover + '.png'
-            }];
-
-            let news_cover = data.news_cover.split(',');
-            let photoList = [];
-            if (news_cover[0] !== '') {
-                news_cover.map((photo, index) => {
-                    photoList.push({
-                        uid: photo,
-                        name: photo + '.png',
-                        status: 'done',
-                        url: restUrl.ADDR + 'UpLoadFile/' + photo + '.png',
-                        response: {
-                            data: {
-                                id: photo
-                            }
-                        }
-                    });
-                });
-            }
-            data.news_cover = photoList;
-
-            this.setState({
-                data,
-                fileList: photoList,
-                loading: false
-            });
         });
     }
 
@@ -119,7 +112,7 @@ class EditNews extends React.Component {
                 param.news_title = values.news_title;
                 param.news_brief = values.news_brief;
                 param.news_content = encodeURIComponent(draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())));
-                param.news_cover = values.news_cover ? (values.news_cover.fileList.map((item, index) => {
+                param.news_cover = values.news_cover ? (values.news_cover.fileList.map(item => {
                     return item.response.data.id;
                 }).join(',')) : null;
                 console.log('handleSubmit  param === ', param);
@@ -139,7 +132,6 @@ class EditNews extends React.Component {
     }
 
     onEditorStateChange = (editorState) => {
-        console.log(' editorState  getCurrentContent===  ', editorState.getCurrentContent());
         this.setState({
             editorState,
         });
@@ -236,18 +228,9 @@ class EditNews extends React.Component {
                             <Divider>新闻内容</Divider>
                             <Row>
                                 <Col span={24}>
-                                    <Editor
-                                        localization={{locale: 'zh'}}
-                                        wrapperClassName="wysiwyg-wrapper"
+                                    <ZZEditor
                                         editorState={editorState}
                                         onEditorStateChange={this.onEditorStateChange}
-                                        toolbar={{
-                                            image: {
-                                                previewImage: true,
-                                                uploadCallback: this.uploadImageCallBack,
-                                                alt: {present: true, mandatory: false},
-                                            },
-                                        }}
                                     />
                                 </Col>
                             </Row>
