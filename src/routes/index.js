@@ -22,6 +22,7 @@ import OrderDetailInfo from '../modules/order/component/orderDetailInfo';
 /* 案例和新闻管理 */
 import CaseList from '../modules/news/component/caseList';
 import AddCase from '../modules/news/component/addCase';
+import EditCase from '../modules/news/component/editCase';
 import NewsList from '../modules/news/component/newsList';
 import AddNews from '../modules/news/component/addNews';
 import NewsDetailInfo from '../modules/news/component/newsDetailInfo';
@@ -48,6 +49,7 @@ module.exports = (
             <route path="news/editNews/:id" component={EditNews} />
             <route path="news/caseList" component={CaseList} />
             <route path="news/addCase" component={AddCase} />
+            <route path="news/editCase/:id" component={EditCase} />
         </Route>
     </Route>
 );
