@@ -28,8 +28,8 @@ const FormItem = Form.Item;
 const Step = Steps.Step;
 const Option = Select.Option;
 
-const getNewsDetailInfoUrl = restUrl.BASE_HOST + 'News/getNewsDetail';
-const saveNewsUrl = restUrl.BASE_HOST + 'News/saveAPNews';
+const getNewsDetailInfoUrl = restUrl.ADDR + 'News/getNewsDetail';
+const saveNewsUrl = restUrl.ADDR + 'News/saveAPNews';
 
 const formItemLayout = {
     labelCol: {span: 6},
@@ -59,7 +59,7 @@ class EditNews extends React.Component {
         param.newsId = this.props.params.id;
         ajax.getJSON(getNewsDetailInfoUrl, param, (data) => {
             data = data.backData;
-            if(data.news_content && data.news_content !== ''){
+            if (data.news_content && data.news_content !== '') {
                 data.news_content = decodeURIComponent(data.news_content);
                 console.log('data.news_content === ', data.news_content);
                 const contentBlock = htmlToDraft(data.news_content);
