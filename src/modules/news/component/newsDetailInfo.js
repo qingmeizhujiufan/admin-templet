@@ -38,7 +38,7 @@ class NewsDetailInfo extends React.Component {
   		data.news_content = decodeURIComponent(data.news_content);
   		data.contentHtml = data.news_content;
   		console.log('contentHtml === ', data.contentHtml);
-  		data.news_cover = restUrl.ADDR + 'UpLoadFile/' + data.news_cover + '.png';
+  		data.news_cover = restUrl.BASE_HOST + 'UpLoadFile/' + data.news_cover + '.png';
 		this.setState({
 			data,
 			loading: false

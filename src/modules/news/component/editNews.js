@@ -57,7 +57,7 @@ class EditNews extends React.Component {
         let param = {};
         param.newsId = this.props.params.id;
         ajax.getJSON(getNewsDetailInfoUrl, param, (data) => {
-            if(data.success){
+            if (data.success) {
                 data = data.backData;
                 if (data.news_content && data.news_content !== '') {
                     data.news_content = decodeURIComponent(data.news_content);
@@ -79,7 +79,7 @@ class EditNews extends React.Component {
                             uid: photo,
                             name: photo + '.png',
                             status: 'done',
-                            url: restUrl.ADDR + 'UpLoadFile/' + photo + '.png',
+                            url: restUrl.BASE_HOST + 'UpLoadFile/' + photo + '.png',
                             response: {
                                 data: {
                                     id: photo
@@ -112,9 +112,9 @@ class EditNews extends React.Component {
                 param.news_title = values.news_title;
                 param.news_brief = values.news_brief;
                 param.news_content = encodeURIComponent(draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())));
-                param.news_cover = values.news_cover ? (values.news_cover.fileList.map(item => {
+                param.news_cover = values.news_cover.map(item => {
                     return item.response.data.id;
-                }).join(',')) : null;
+                }).join(',');
                 console.log('handleSubmit  param === ', param);
 
                 ajax.postJSON(saveNewsUrl, JSON.stringify(param), (data) => {
@@ -137,7 +137,14 @@ class EditNews extends React.Component {
         });
     }
 
-    handleChange = ({fileList}) => this.setState({fileList})
+    handleChange = ({fileList}) => {
+        let {data} = this.state;
+        data.news_cover = fileList;
+        this.setState({
+            data,
+            fileList
+        });
+    }
 
     normFile = (e) => {
         console.log('Upload event:', e);

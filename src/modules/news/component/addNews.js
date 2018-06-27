@@ -19,7 +19,7 @@ import draftToHtml from "draftjs-to-html";
 
 const FormItem = Form.Item;
 
-const saveNewsUrl = restUrl.BASE_HOST + 'News/saveAPNews';
+const saveNewsUrl = restUrl.ADDR + 'News/saveAPNews';
 
 const formItemLayout = {
     labelCol: {span: 6},
@@ -52,9 +52,9 @@ class AddNews extends React.Component {
                 param.news_title = values.news_title;
                 param.news_brief = values.news_brief;
                 param.news_content = encodeURIComponent(draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())));
-                param.news_cover = values.news_cover ? (values.news_cover.fileList.map((item, index) => {
+                param.news_cover = values.news_cover.map((item, index) => {
                     return item.response.data.id;
-                }).join(',')) : null;
+                }).join(',');
                 console.log('handleSubmit  param === ', param);
                 ajax.postJSON(saveNewsUrl, JSON.stringify(param), (data) => {
                     this.setState({
@@ -74,6 +74,14 @@ class AddNews extends React.Component {
         this.setState({
             editorState,
         });
+    }
+
+    normFile = (e) => {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
     }
 
     handleChange = ({fileList}) => this.setState({fileList})
@@ -97,6 +105,8 @@ class AddNews extends React.Component {
                                     {...formItemLayout}
                                 >
                                     {getFieldDecorator('news_cover', {
+                                        valuePropName: 'fileList',
+                                        getValueFromEvent: this.normFile,
                                         rules: [{required: true, message: '封面图片不能为空!'}]
                                     })(
                                         <Upload
