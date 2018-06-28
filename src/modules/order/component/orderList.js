@@ -81,9 +81,10 @@ class OrderList extends React.Component {
                     <Menu.Item>
                         <Link to={this.detailrouter(record.id)}>详情</Link>
                     </Menu.Item>
-                    <Menu.Item>
-                        <a>完成订单</a>
-                    </Menu.Item>
+                    {
+                        record.state === 1 ? (
+                            < Menu.Item><a>完成订单</a></Menu.Item>) : null
+                    }
                 </Menu>}
             >
                 <a className="ant-dropdown-link">操作</a>
